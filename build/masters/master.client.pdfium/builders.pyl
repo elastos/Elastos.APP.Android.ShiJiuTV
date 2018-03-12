@@ -1,0 +1,321 @@
+{
+  "master_base_class": "Master3",
+  "master_classname": "Pdfium",
+  "master_port": 20310,
+  "master_port_alt": 40310,
+  "slave_port": 30310,
+  "templates": ["templates", "../master.chromium/templates"],
+
+  "builders": {
+    "android": {
+      "recipe": "pdfium",
+      "scheduler": "pdfium_commits",
+      "slave_pools": ["android"],
+      "category": "0main",
+      "properties": {
+        "skip_test": True,
+        "target_os": "android",
+      },
+    },
+    "drm_win_xfa": {
+      "recipe": "pdfium",
+      "scheduler": "pdfium_commits",
+      "slave_pools": ["drmemory_win"],
+      "category": "1xfa",
+      "properties": {
+        "xfa": True,
+        "memory_tool": "drmemory",
+        "target_cpu": "x86",
+      },
+    },
+    "linux": {
+      "recipe": "pdfium",
+      "scheduler": "pdfium_commits",
+      "slave_pools": ["linux_trusty"],
+      "category": "0main",
+    },
+    "linux_asan": {
+      "recipe": "pdfium",
+      "scheduler": "pdfium_commits",
+      "slave_pools": ["linux_trusty"],
+      "category": "0main",
+      "properties": {
+        "memory_tool": "asan",
+      },
+    },
+    "linux_no_v8": {
+      "recipe": "pdfium",
+      "scheduler": "pdfium_commits",
+      "slave_pools": ["linux_trusty"],
+      "category": "2no_v8",
+      "properties": {
+        "v8": False,
+      },
+    },
+    "linux_xfa": {
+      "recipe": "pdfium",
+      "scheduler": "pdfium_commits",
+      "slave_pools": ["linux_trusty"],
+      "category": "1xfa",
+      "properties": {
+        "xfa": True,
+      },
+    },
+    "linux_xfa_asan": {
+      "recipe": "pdfium",
+      "scheduler": "pdfium_commits",
+      "slave_pools": ["linux_trusty"],
+      "category": "1xfa",
+      "properties": {
+        "xfa": True,
+        "memory_tool": "asan",
+      },
+    },
+    "linux_xfa_gyp": {
+      "recipe": "pdfium",
+      "scheduler": "pdfium_commits",
+      "slave_pools": ["linux_trusty"],
+      "category": "3xfa_gyp",
+      "properties": {
+        "xfa": True,
+        "gn": False,
+      },
+    },
+    "linux_xfa_rel": {
+      "recipe": "pdfium",
+      "scheduler": "pdfium_commits",
+      "slave_pools": ["linux_trusty"],
+      "category": "1xfa",
+      "properties": {
+        "xfa": True,
+        "rel": True,
+      },
+    },
+    "linux_xfa_rel_gyp": {
+      "recipe": "pdfium",
+      "scheduler": "pdfium_commits",
+      "slave_pools": ["linux_trusty"],
+      "category": "3xfa_gyp",
+      "properties": {
+        "xfa": True,
+        "rel": True,
+        "gn": False,
+      },
+    },
+    "mac": {
+      "recipe": "pdfium",
+      "scheduler": "pdfium_commits",
+      "slave_pools": ["mac"],
+      "category": "0main",
+    },
+    "mac_no_v8": {
+      "recipe": "pdfium",
+      "scheduler": "pdfium_commits",
+      "slave_pools": ["mac"],
+      "category": "2no_v8",
+      "properties": {
+        "v8": False,
+      },
+    },
+    "mac_xfa": {
+      "recipe": "pdfium",
+      "scheduler": "pdfium_commits",
+      "slave_pools": ["mac"],
+      "category": "1xfa",
+      "properties": {
+        "xfa": True,
+      },
+    },
+    "mac_xfa_gyp": {
+      "recipe": "pdfium",
+      "scheduler": "pdfium_commits",
+      "slave_pools": ["mac"],
+      "category": "3xfa_gyp",
+      "properties": {
+        "xfa": True,
+        "gn": False,
+      },
+    },
+    "mac_xfa_rel": {
+      "recipe": "pdfium",
+      "scheduler": "pdfium_commits",
+      "slave_pools": ["mac"],
+      "category": "1xfa",
+      "properties": {
+        "xfa": True,
+        "rel": True,
+      },
+    },
+    "mac_xfa_rel_gyp": {
+      "recipe": "pdfium",
+      "scheduler": "pdfium_commits",
+      "slave_pools": ["mac"],
+      "category": "3xfa_gyp",
+      "properties": {
+        "xfa": True,
+        "rel": True,
+        "gn": False,
+      },
+    },
+    "windows": {
+      "recipe": "pdfium",
+      "scheduler": "pdfium_commits",
+      "slave_pools": ["windows"],
+      "category": "0main",
+    },
+    "windows_no_v8": {
+      "recipe": "pdfium",
+      "scheduler": "pdfium_commits",
+      "slave_pools": ["windows"],
+      "category": "2no_v8",
+      "properties": {
+        "v8": False,
+      },
+    },
+    "windows_xfa": {
+      "recipe": "pdfium",
+      "scheduler": "pdfium_commits",
+      "slave_pools": ["windows"],
+      "category": "1xfa",
+      "properties": {
+        "xfa": True,
+      },
+    },
+    "windows_xfa_32": {
+      "recipe": "pdfium",
+      "scheduler": "pdfium_commits",
+      "slave_pools": ["windows"],
+      "category": "1xfa",
+      "properties": {
+        "xfa": True,
+        "target_cpu": "x86",
+      },
+    },
+    "windows_xfa_clang": {
+      "recipe": "pdfium",
+      "scheduler": "pdfium_commits",
+      "slave_pools": ["windows"],
+      "category": "1xfa",
+      "properties": {
+        "xfa": True,
+        "clang": True,
+      },
+    },
+    "windows_xfa_clang_32": {
+      "recipe": "pdfium",
+      "scheduler": "pdfium_commits",
+      "slave_pools": ["windows"],
+      "category": "1xfa",
+      "properties": {
+        "xfa": True,
+        "clang": True,
+        "target_cpu": "x86",
+      },
+    },
+    "windows_xfa_gyp": {
+      "recipe": "pdfium",
+      "scheduler": "pdfium_commits",
+      "slave_pools": ["windows"],
+      "category": "3xfa_gyp",
+      "properties": {
+        "xfa": True,
+        "gn": False,
+        "target_cpu": "x64",
+      },
+    },
+    "windows_xfa_rel": {
+      "recipe": "pdfium",
+      "scheduler": "pdfium_commits",
+      "slave_pools": ["windows"],
+      "category": "1xfa",
+      "properties": {
+        "xfa": True,
+        "rel": True,
+      },
+    },
+    "windows_xfa_rel_gyp": {
+      "recipe": "pdfium",
+      "scheduler": "pdfium_commits",
+      "slave_pools": ["windows"],
+      "category": "3xfa_gyp",
+      "properties": {
+        "xfa": True,
+        "rel": True,
+        "gn": False,
+        "target_cpu": "x64",
+      },
+    },
+  },
+
+  "schedulers": {
+    "pdfium_commits": {
+      "type": "git_poller",
+      "git_repo_url": "https://pdfium.googlesource.com/pdfium.git",
+    },
+  },
+
+  "slave_pools": {
+    "android": {
+      "slave_data": {
+        "bits": 64,
+        "os": "linux",
+        "version": "trusty",
+      },
+      "slaves": [
+        "slave103-c3",
+      ],
+    },
+    "linux_trusty": {
+      "slave_data": {
+        "bits": 64,
+        "os": "linux",
+        "version": "trusty",
+      },
+      "slaves": [
+        "vm71-m3",
+        "vm123-m3",
+        "vm189-m3",
+        "vm191-m3",
+        "vm198-m3",
+        "vm202-m3",
+      ],
+    },
+    "mac": {
+      "slave_data": {
+        "bits": 64,
+        "os": "mac",
+        "version": "10.9",
+      },
+      "slaves": [
+        "vm24-m3",
+        "vm25-m3",
+        "vm635-m3",
+      ],
+    },
+    "windows": {
+      "slave_data": {
+        "bits": 64,
+        "os": "win",
+        "version": "win7",
+      },
+      "slaves": [
+        "vm29-m3",
+        "vm51-m3",
+        "vm115-m3",
+        "vm119-m3",
+        "vm121-m3",
+        "vm144-m3",
+      ],
+    },
+    "drmemory_win": {
+      "slave_data": {
+        "bits": 64,
+        "os": "win",
+        "version": "win7",
+      },
+      "slaves": [
+        "vm270-m3",
+      ],
+    },
+  },
+}

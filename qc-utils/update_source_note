@@ -1,0 +1,10 @@
+http://dev.chromium.org/developers/how-tos/get-the-code
+
+export PATH=`pwd`/depot_tools:"$PATH"
+
+(cd src && git pull)
+git checkout 43.0.2357.93
+gclient sync --with_branch_heads
+
+./build/install-build-deps.sh
+

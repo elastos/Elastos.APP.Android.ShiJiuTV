@@ -1,0 +1,358 @@
+{
+  "master_base_class": "Master1",
+  "master_port": 20101,
+  "master_port_alt": 40101,
+  "slave_port": 30101,
+  "templates": ["templates", "../master.chromium/templates"],
+
+  "builders": {
+    "Android Cronet Builder": {
+      "recipe": "cronet",
+      "scheduler": "android_commits",
+      "slave_pools": ["cronet_common"],
+      "category": "0Cronet",
+    },
+    "Android Cronet Builder Asan": {
+      "recipe": "cronet",
+      "scheduler": "android_commits",
+      "slave_pools": ["cronet_common"],
+      "category": "0Cronet",
+    },
+    "Android Cronet ARMv6 Builder": {
+      "recipe": "cronet",
+      "scheduler": "android_commits",
+      "slave_pools": ["cronet_common"],
+      "category": "0Cronet",
+    },
+    "Android Cronet ARM64 Builder": {
+      "recipe": "cronet",
+      "scheduler": "android_commits",
+      "slave_pools": ["cronet_arm64"],
+      "category": "0Cronet",
+    },
+    "Android Cronet x86 Builder": {
+      "recipe": "cronet",
+      "scheduler": "android_commits",
+      "slave_pools": ["cronet_common"],
+      "category": "0Cronet",
+    },
+    "Android Cronet MIPS Builder": {
+      "recipe": "cronet",
+      "scheduler": "android_commits",
+      "slave_pools": ["cronet_common"],
+      "category": "0Cronet",
+    },
+    "Android Cronet Data Reduction Proxy Builder": {
+      "recipe": "cronet",
+      "scheduler": "android_commits",
+      "slave_pools": ["cronet_common"],
+      "category": "0Cronet",
+    },
+    "Android Cronet Builder (dbg)": {
+      "recipe": "cronet",
+      "scheduler": "android_commits",
+      "slave_pools": ["cronet_common"],
+      "category": "0Cronet",
+    },
+    "Android Cronet ARM64 Builder (dbg)": {
+      "recipe": "cronet",
+      "scheduler": "android_commits",
+      "slave_pools": ["cronet_arm64_dbg"],
+      "category": "0Cronet",
+    },
+    "Android Cronet x86 Builder (dbg)": {
+      "recipe": "cronet",
+      "scheduler": "android_commits",
+      "slave_pools": ["cronet_x86"],
+      "category": "0Cronet",
+    },
+    "Android WebView CTS L-MR1 (dbg)": {
+      "recipe": "chromium",
+      "scheduler": None,
+      "slave_pools": ["webview_cts"],
+      "category": "1Webview",
+    },
+    "Android Webview L (dbg)": {
+      "recipe": "chromium",
+      "scheduler": None,
+      "slave_pools": ["webview_l"],
+      "category": "1Webview",
+    },
+    "Android Webview M (dbg)": {
+      "recipe": "chromium",
+      "scheduler": None,
+      "slave_pools": ["webview_m"],
+      "category": "1Webview",
+    },
+    "Android MIPS Builder (dbg)": {
+      "recipe": "chromium",
+      "scheduler": "android_commits",
+      "slave_pools": ["mips_builder"],
+      "category": "2Builders",
+      "slavebuilddir": "android_build",
+    },
+    "Android x64 Builder (dbg)": {
+      "recipe": "chromium",
+      "scheduler": "android_commits",
+      "slave_pools": ["builders"],
+      "category": "2Builders",
+      "slavebuilddir": "android_build",
+    },
+    "Android x86 Builder (dbg)": {
+      "recipe": "chromium",
+      "scheduler": "android_commits",
+      "slave_pools": ["builders"],
+      "category": "2Builders",
+      "slavebuilddir": "android_build",
+    },
+    "Android arm Builder (dbg)": {
+      "recipe": "chromium",
+      "scheduler": "android_commits",
+      "slave_pools": ["arm_builder"],
+      "category": "2Builders",
+      "slavebuilddir": "android_build",
+    },
+    "Android arm64 Builder (dbg)": {
+      "recipe": "chromium",
+      "scheduler": "android_commits",
+      "slave_pools": ["builders"],
+      "category": "2Builders",
+      "slavebuilddir": "android_build",
+    },
+    "Android Swarm Builder": {
+      "recipe": "chromium",
+      "scheduler": "android_commits",
+      "slave_pools": ["builders"],
+      "category": "4Swarming",
+    },
+    "Android N5X Swarm Builder": {
+      "recipe": "chromium",
+      "scheduler": "android_commits",
+      "slave_pools": ["builders"],
+      "category": "4Swarming",
+      "slavebuilddir": "android_build",
+    },
+    "Jelly Bean Tester": {
+      "recipe": "chromium",
+      "scheduler": None,
+      "slave_pools": ["jelly_bean_tester"],
+      "category": "3Testers",
+      "mergeRequests": True,
+    },
+    "KitKat Tablet Tester": {
+      "recipe": "chromium",
+      "scheduler": None,
+      "slave_pools": ["kit_kat_tablet"],
+      "category": "3Testers",
+      "mergeRequests": True,
+    },
+    "Lollipop Consumer Tester": {
+      "recipe": "chromium",
+      "scheduler": None,
+      "slave_pools": ["lollipop_consumer"],
+      "category": "3Testers",
+      "mergeRequests": True,
+    },
+    "Lollipop Low-end Tester": {
+      "recipe": "chromium",
+      "scheduler": None,
+      "slave_pools": ["lollipop_low_end"],
+      "category": "3Testers",
+      "mergeRequests": True,
+    },
+    "Lollipop Phone Tester": {
+      "recipe": "chromium",
+      "scheduler": None,
+      "slave_pools": ["lollipop_phone"],
+      "category": "3Testers",
+      "mergeRequests": True,
+    },
+    "Lollipop Tablet Tester": {
+      "recipe": "chromium",
+      "scheduler": None,
+      "slave_pools": ["lollipop_tablet"],
+      "category": "3Testers",
+      "mergeRequests": True,
+    },
+    "Marshmallow 64 bit Tester": {
+      "recipe": "chromium",
+      "scheduler": None,
+      "slave_pools": ["marshmallow_64"],
+      "category": "3Testers",
+      "mergeRequests": True,
+    },
+    "Marshmallow Tablet Tester": {
+      "recipe": "chromium",
+      "scheduler": None,
+      "slave_pools": ["marshmallow_tablet"],
+      "category": "3Testers",
+      "mergeRequests": True,
+    },
+  },
+
+  "schedulers": {
+    "android_commits": {
+      "type": "git_poller",
+      "git_repo_url": "https://chromium.googlesource.com/chromium/src",
+    },
+  },
+
+  "slave_pools": {
+    "arm_builder": {
+      "slave_data": {
+        "os": "linux",
+        "version": "precise",
+        "bits": 64,
+      },
+      "slaves": [
+          "slave35-c1",
+        ],
+    },
+    "builders": {
+      "slave_data": {
+        "os": "linux",
+        "version": "trusty",
+        "bits": 64,
+      },
+      "slaves": [
+          "slave36-c1",
+          "slave37-c1",
+          "slave38-c1",
+          "slave39-c1",
+          "slave41-c1",
+          "slave46-c1",
+          "slave76-c1",
+        ],
+    },
+    "cronet_arm64": {
+      "slave_data": {
+        "os": "linux",
+        "version": "precise",
+        "bits": 64,
+      },
+      "slaves": ["vm982-m1"],
+    },
+    "cronet_arm64_dbg": {
+      "slave_data": {
+        "os": "linux",
+        "version": "precise",
+        "bits": 64,
+      },
+      "slaves": ["vm983-m1"],
+    },
+    "cronet_x86": {
+      "slave_data": {
+        "os": "linux",
+        "version": "precise",
+        "bits": 64,
+      },
+      "slaves": ["vm990-m1"],
+    },
+    "cronet_common": {
+      "slave_data": {
+        "os": "linux",
+        "version": "precise",
+        "bits": "64",
+      },
+      "slaves": ["build69-b1"],
+    },
+    "jelly_bean_tester": {
+      "slave_data": {
+        "os": "linux",
+        "version": "precise",
+        "bits": "64",
+      },
+      "slaves": ["build40-b1"],
+    },
+    "kit_kat_tablet": {
+      "slave_data": {
+        "os": "linux",
+        "version": "precise",
+        "bits": "64",
+      },
+      "slaves": ["build42-b1"],
+    },
+    "lollipop_consumer": {
+      "slave_data": {
+        "os": "linux",
+        "version": "precise",
+        "bits": "64",
+      },
+      "slaves": ["build39-b1"],
+    },
+    "lollipop_low_end": {
+      "slave_data": {
+        "os": "linux",
+        "version": "precise",
+        "bits": "64",
+      },
+      "slaves": ["build19-b1"],
+    },
+    "lollipop_phone": {
+      "slave_data": {
+        "os": "linux",
+        "version": "precise",
+        "bits": "64",
+      },
+      "slaves": ["build41-b1"],
+    },
+    "lollipop_tablet": {
+      "slave_data": {
+        "os": "linux",
+        "version": "precise",
+        "bits": "64",
+      },
+      "slaves": ["build43-b1"],
+    },
+    "marshmallow_64": {
+      "slave_data": {
+        "os": "linux",
+        "version": "precise",
+        "bits": "64",
+      },
+      "slaves": ["build38-b1"],
+    },
+    "marshmallow_tablet": {
+      "slave_data": {
+        "os": "linux",
+        "version": "precise",
+        "bits": "64",
+      },
+      "slaves": ["build44-b1"],
+    },
+    "mips_builder": {
+      "slave_data": {
+        "os": "linux",
+        "version": "trusty",
+        "bits": 64,
+      },
+      "slaves": [
+        "slave75-c1",
+      ],
+    },
+    "webview_cts": {
+      "slave_data": {
+        "os": "linux",
+        "version": "precise",
+        "bits": 64,
+      },
+      "slaves": ["build68-b1"],
+    },
+    "webview_l": {
+      "slave_data": {
+        "os": "linux",
+        "version": "precise",
+        "bits": 64,
+      },
+      "slaves": ["build62-b1"],
+    },
+    "webview_m": {
+      "slave_data": {
+        "os": "linux",
+        "version": "trusty",
+        "bits": 64,
+      },
+      "slaves": ["build37-b1"],
+    },
+  }
+}

@@ -1,0 +1,26 @@
+This is a slightly advanced version of Xvfb from xorg-server
+1.9.3.901
+
+This version was built from the 1.9.3.901 sources at freedesktop.org.
+
+It was compiled using a random flavour of ubuntu Lucid according to the
+recipes in the building subdirectory in order to produce a statically linked
+version that would work on the host machines, since many of the libraries
+are present, but incompatably earlier versions.
+
+Peter Mayo
+(petermayo@google.com)
+
+
+
+BUILD INSTRUCTIONS
+
+--- Setup ---
+* Make a new working directory.
+* Run fetch-source script to check for and fetch needed sources.
+* Run install-prereqs script (as root) to check and install need packages.
+* Make a subdir for compilation, and cd there.
+* Run then-build to extract and build.
+* Test and put the executable in the top level here for use.
+* Do this for each of the architectures you need.
+* You should be able to remove the compiling and working directories you made.

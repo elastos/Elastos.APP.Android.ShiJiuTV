@@ -1,0 +1,114 @@
+#!/bin/sh
+# Copyright (c) 2012 The Chromium Authors. All rights reserved.
+# Use of this source code is governed by a BSD-style license that can be
+# found in the LICENSE file.
+
+PPATH=/usr/lib/pkgconfig
+LPATH="$(pwd)"
+export PKG_CONFIG_PATH="${LPATH}"/lib/pkgconfig:"${PPATH}"
+export PATH="${LPATH}/bin:${PATH}"
+
+# Print an early message about what we think we're building.
+# Informative only, if this fails, comment it out.
+arch=$(python -c 'import platform; print platform.architecture()[0]')
+echo "Building for $arch ..."
+
+PKGS="util-macros-1.11.0 xproto-7.0.20 xcb-proto-1.6 libXfont-1.4.3 \
+    dri2proto-2.3 libxkbfile-1.0.7 libdrm-2.4.26 libXmu-1.0.5"
+
+rm -f .xorg.stop
+for p in ${PKGS} ; do
+  if [ -f $p.succeeded ] ; then
+    echo $p already done
+  else
+    tar xzf ../$p.tar.gz 
+    if [ -f $p/configure ] ; then
+      ( cd $p && ./configure --prefix="$LPATH" --exec_prefix="$LPATH" && \
+        make && make install ) >$p.output 2>&1 && mv $p.output $p.succeeded
+    else
+      ( cd $p && ./autogen.sh --prefix="$LPATH" --exec_prefix="$LPATH" && \
+        make && make install ) >$p.output 2>&1 && mv $p.output $p.succeeded
+    fi
+    if [ -f $p.succeeded ] ; then
+      echo $p done
+    else
+      echo $p FAILED ; tail -80 $p.output ; echo $p FAILED
+      touch .xorg.stop
+      break
+    fi
+  fi
+done
+
+mv=${MESA_VER-8.0.1}
+p=Mesa-${mv}
+
+if [ -f $p.succeeded ] ; then
+    echo $p already done
+else
+  [ -d lib ] || mkdir lib
+  tar xzf ../MesaLib-${mv}.tar.gz
+  ( cd $p && \
+    ./configure --prefix="$LPATH" --exec_prefix="$LPATH" \
+                --with-driver=xlib \
+                --with-gallium-drivers=swrast --with-dri-drivers= && \
+    make && make install ) >$p.output 2>&1 && mv $p.output $p.succeeded
+  if [ -f $p.succeeded ] ; then
+    echo $p done
+    cp $p/lib/gallium/libGL.so lib/libllvmpipe.so
+    echo llvmpipe.so built for $arch
+  else
+    echo $p FAILED ; tail -80 $p.output ; echo $p FAILED
+    touch .xorg.stop
+  fi
+fi
+
+
+#
+# The builders are wilder/older versions of linux.  pixman is missing a
+# referenced symbol on Hardy.  Xfont fails to read the fonts, and it has
+# recursive dependencies we have to add to the top level to link statically.
+# pixman is also a dependency of libfb.la, so we have to subvert that too.
+# Peter Mayo - Feb 24, 2011
+#
+function makeXvfbMoreStatically() {
+[ -f Xvfb ] && rm -f Xvfb
+make -n Xvfb 2>&1 | tail -1 |\
+  sed -e "s/^.*;//" \
+      -e "s%libfb.la%.libs/libfb.a%" -e "s% -l\(pixman-1\)% /usr/lib/lib\1.a%" \
+      -e "s% -l\(Xfont\)% ../../../lib/lib\1.a -lfreetype -lfontenc%" \
+  | bash -x
+}
+
+if [ \! -f .xorg.stop ] ; then
+  p=xorg-server-1.9.3.901
+  [ -d bin ] || mkdir bin
+  tar xzf ../$p.tar.gz
+  echo building in $p ...
+  ( cd $p && ./configure --disable-config-hal --disable-dri --disable-glx \
+                         --prefix=/usr && \
+    ( cd fb && make ) && \
+    ( cd xfixes && make ) && \
+    ( cd Xext && make ) && \
+    ( cd dbe && make ) && \
+    ( cd record && make ) && \
+    ( cd randr && make ) && \
+    ( cd render && make ) && \
+    ( cd damageext && make ) && \
+    ( cd miext/damage && make ) && \
+    ( cd miext/shadow && make ) && \
+    ( cd Xi && make ) && \
+    ( cd xkb && make ) && \
+    ( cd composite && make ) && \
+    ( cd dix && make ) && \
+    ( cd mi && make ) && \
+    ( cd os && make ) && \
+    ( cd glx && make ) && \
+    ( cd hw/vfb && make Xvfb && makeXvfbMoreStatically ) ) >$p.output 2>&1 && \
+    mv $p.output $p.succeeded
+  if [ -f $p.succeeded ] ; then
+    cp $p/hw/vfb/Xvfb bin/.
+    echo "Built Xvfb for $arch sucessfully."
+  else 
+    echo $p FAILED ; tail -80 $p.output ; echo $p FAILED \; see $p.output
+  fi
+fi

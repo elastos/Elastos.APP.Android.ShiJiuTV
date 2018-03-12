@@ -1,0 +1,46 @@
+#!/bin/sh
+# Copyright (c) 2012 The Chromium Authors. All rights reserved.
+# Use of this source code is governed by a BSD-style license that can be
+# found in the LICENSE file.
+
+# This is a convenience for installing prerequisites that seem to be often
+# missing.
+
+PPATH=/usr/lib/pkgconfig
+LPATH="$(pwd)"
+export PKG_CONFIG_PATH="${PPATH}"
+
+function getxfromy() {
+  case "$1" in
+    */*) testpath="$1" ;;
+    *) testpath="${PPATH}"/"$1".pc ;;
+  esac
+  if [ \! -f "${testpath}" ] ; then
+    sudo apt-get install "$2"
+  fi
+}
+
+getxfromy pixman-1 libpixman-1-dev
+getxfromy fixesproto x11proto-fixes-dev
+getxfromy damageproto x11proto-damage-dev
+getxfromy xcmiscproto x11proto-xcmisc-dev
+getxfromy bigreqsproto x11proto-bigreqs-dev
+getxfromy randrproto x11proto-randr-dev
+getxfromy renderproto x11proto-render-dev
+getxfromy fontsproto x11proto-fonts-dev
+getxfromy videoproto x11proto-video-dev
+getxfromy compositeproto x11proto-composite-dev
+getxfromy scrnsaverproto x11proto-scrnsaver-dev
+getxfromy resourceproto x11proto-resource-dev
+getxfromy xineramaproto x11proto-xinerama-dev
+getxfromy pciaccess libpciaccess-dev
+getxfromy gl libgl1-mesa-dev
+getxfromy glproto x11proto-gl-dev
+getxfromy xf86driproto x11proto-xf86dri-dev
+getxfromy fontenc libfontenc-dev
+getxfromy makedepend xutils-dev
+getxfromy talloc libfontenc-dev
+getxfromy autoconf autoconf
+getxfromy libtool libtool
+getxfromy ffi libffi-dev
+getxfromy /usr/bin/llvm-config llvm-dev

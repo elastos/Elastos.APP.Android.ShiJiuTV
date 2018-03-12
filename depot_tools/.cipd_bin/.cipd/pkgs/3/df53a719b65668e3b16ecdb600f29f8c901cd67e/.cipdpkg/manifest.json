@@ -1,0 +1,16 @@
+{
+  "format_version": "1",
+  "package_name": "infra/tools/luci-auth/linux-amd64",
+  "version_file": ".versions/luci-auth.cipd_version",
+  "files": [
+    {
+      "name": "luci-auth",
+      "size": 9519251,
+      "executable": true
+    },
+    {
+      "name": ".versions/luci-auth.cipd_version",
+      "size": 118
+    }
+  ]
+}

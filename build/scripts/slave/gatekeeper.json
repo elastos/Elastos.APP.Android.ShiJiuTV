@@ -1,0 +1,991 @@
+{
+  "comment": ["This is a configuration file for gatekeeper_ng.py",
+              "Look at that for documentation on this file's format."],
+
+  "masters": {
+    "https://build.chromium.org/p/chromium": [
+      {
+        "categories": [
+          "chromium_tree_closer"
+        ],
+
+        "builders": {
+          "Win": {
+            "categories": [
+              "chromium_windows"
+            ]
+          },
+          "*": {}
+        }
+      }
+    ],
+    "https://build.chromium.org/p/chromium.android": [
+      {
+        "categories": [
+          "chromium_android"
+        ],
+        "excluded_builders": [
+          "Android N5X Swarm Builder",
+          "Android Swarm Builder",
+          "Lollipop Consumer Tester",
+          "Marshmallow 64 bit Tester"
+        ],
+        "builders": {
+          "Android Cronet ARM64 Builder": {
+            "tree_notify": [
+              "cronet-team+build@google.com"
+            ],
+            "closing_optional": [
+              "*"
+            ]
+          },
+          "Android Cronet ARM64 Builder (dbg)": {
+            "tree_notify": [
+              "cronet-team+build@google.com"
+            ],
+            "closing_optional": [
+              "*"
+            ]
+          },
+          "Android Cronet ARMv6 Builder": {
+            "tree_notify": [
+              "cronet-team+build@google.com"
+            ],
+            "closing_optional": [
+              "*"
+            ]
+          },
+          "Android Cronet Builder": {
+            "tree_notify": [
+              "cronet-team+build@google.com"
+            ],
+            "closing_optional": [
+              "*"
+            ]
+          },
+          "Android Cronet Builder (dbg)": {
+            "tree_notify": [
+              "cronet-team+build@google.com"
+            ],
+            "closing_optional": [
+              "*"
+            ]
+          },
+          "Android Cronet Data Reduction Proxy Builder": {
+            "tree_notify": [
+              "cronet-team+build@google.com"
+            ],
+            "closing_optional": [
+              "*"
+            ]
+          },
+          "Android Cronet MIPS Builder": {
+            "tree_notify": [
+              "cronet-team+build@google.com"
+            ],
+            "closing_optional": [
+              "*"
+            ]
+          },
+          "Android Cronet x86 Builder": {
+            "tree_notify": [
+              "cronet-team+build@google.com"
+            ],
+            "closing_optional": [
+              "*"
+            ]
+          },
+          "Android Cronet x86 Builder (dbg)": {
+            "tree_notify": [
+              "cronet-team+build@google.com"
+            ],
+            "closing_optional": [
+              "*"
+            ]
+          },
+          "*": {}
+        }
+      }
+    ],
+    "https://build.chromium.org/p/chromium.chrome": [
+      {
+        "categories": [
+          "chromium_tree_closer"
+        ],
+        "builders": {
+          "*": {}
+        }
+      }
+    ],
+    "https://build.chromium.org/p/chromiumos": [
+      {
+        "comment": ["master.chromiumos"],
+        "forgive_all": true,
+        "builders": {
+          "*": {
+          }
+        },
+        "excluded_builders": [ "*" ]
+      }
+    ],
+    "https://build.chromium.org/p/chromium.chromiumos": [
+      {
+        "categories": [
+          "chromium_tree_closer"
+        ],
+        "builders": {
+          "*": {}
+        },
+        "excluded_builders" : [
+          "Linux ChromiumOS Ozone Builder",
+          "Linux ChromiumOS Ozone Tests (1)",
+          "Linux ChromiumOS Ozone Tests (2)",
+          "*Compile"
+        ]
+      }
+    ],
+    "https://build.chromium.org/p/chromium.gatekeeper": [
+      {
+        "tree_notify": [
+          "chromium-build-heartbeat@chromium-gatekeeper-sentry.appspotmail.com"
+        ],
+
+        "builders": {
+          "Chromium Gatekeeper Failure": {
+            "forgiving_steps": [
+              "*"
+            ]
+          }
+        }
+      }
+    ],
+    "https://build.chromium.org/p/chromium.gpu": [
+      {
+        "tree_notify": ["chrome-gpu-build-failures@google.com"],
+        "sheriff_classes": ["sheriff", "sheriff_gpu"],
+        "categories": [
+          "chromium_tree_closer"
+        ],
+        "builders": {
+          "Mac 10.8 Release (Intel)": {
+            "excluded_steps": [
+              "maps_pixel_test"
+            ]
+          },
+          "*": {}
+        },
+        "comment": [
+          "Keep excluded builders in sync with the gpu closers list in",
+          "masters/master.chromium/templates/announce.html.",
+          "Mac Release (ATI): crbug.com/395305"
+        ],
+        "excluded_builders" : [
+          "Android Debug (Nexus 7)",
+          "GPU Linux Builder (dbg)",
+          "GPU Mac Builder (dbg)",
+          "GPU Win Builder (dbg)",
+          "Linux Debug (NVIDIA)",
+          "Mac 10.8 Debug (Intel)",
+          "Mac Debug (Intel)",
+          "Mac Release (ATI)",
+          "Mac Retina Debug",
+          "Win7 Debug (NVIDIA)",
+          "Win8 Debug (NVIDIA)"
+        ],
+        "comment": [
+          "Any steps whose results must be temporarily ignored (e.g.",
+          "due to flakiness) can be added here.",
+          "Remove webgl_conformance_tests after crbug.com/383963 fixed"
+        ],
+        "excluded_steps": [
+          "webgl_conformance_tests"
+        ]
+      }
+    ],
+    "https://build.chromium.org/p/chromium.infra.cron": [
+      {
+        "builders": {
+          "gnumbd": {
+            "categories": [
+              "chromium_gnumbd_closer"
+            ]
+          },
+          "*": {
+            "excluded_builders": [
+              "lkgr-tag-pusher",
+              "builder_alerts",
+              "publish_tarball",
+              "rebaseline-o-matic",
+              "recipe-autoroller-public",
+              "Chromium Linux Codesearch",
+              "ChromiumOS Codesearch",
+              "git-hash-metrics"
+            ]
+          }
+        }
+      },
+      {
+        "close_tree": false,
+        "tree_notify": [
+          "chrome-troopers+alerts-staging@google.com"
+        ],
+
+        "subject_template": "Codesearch build failure on %(builder_name)s",
+
+        "builders": {
+          "Chromium Linux Codesearch": {
+            "excluded_steps": [
+              "run translation_unit clang tool"
+            ]
+          },
+          "ChromiumOS Codesearch": {
+            "excluded_steps": [
+              "run translation_unit clang tool"
+            ]
+          }
+        }
+      },
+      {
+        "close_tree": false,
+        "builders": {
+          "recipe-autoroller-public": {
+            "tree_notify": [
+              "martiniss@chromium.org",
+              "estaab@chromium.org"
+            ],
+            "forgiving_optional": [ "*" ]
+          }
+        }
+      }
+    ],
+    "https://build.chromium.org/p/chromium.infra": [
+      {
+        "builders": {
+          "infra-continuous-wily-64": {
+            "categories": [
+              "infra_tree_closer"
+            ]
+          },
+          "infra-continuous-trusty-64": {
+            "categories": [
+              "infra_tree_closer"
+            ]
+          },
+          "infra-continuous-trusty-32": {
+            "categories": [
+              "infra_tree_closer"
+            ]
+          },
+          "infra-continuous-precise-64": {
+            "categories": [
+              "infra_tree_closer"
+            ]
+          },
+          "infra-continuous-precise-32": {
+            "categories": [
+              "infra_tree_closer"
+            ]
+          },
+          "infra-continuous-mac-10.9-64": {
+            "categories": [
+              "infra_tree_closer"
+            ]
+          },
+          "infra-continuous-win-64": {
+            "categories": [
+              "infra_tree_closer"
+            ]
+          },
+          "infra-continuous-win-32": {
+            "categories": [
+              "infra_tree_closer"
+            ]
+          }
+        }
+      }
+    ],
+    "https://build.chromium.org/p/chromium.linux": [
+      {
+        "categories": [
+          "chromium_tree_closer"
+        ],
+        "builders": {
+          "Android Builder (dbg)": {
+            "categories": [
+              "chromium_android"
+            ]
+          },
+          "Android Tests (dbg)": {
+            "categories": [
+              "chromium_android"
+            ]
+          },
+          "Android Builder": {
+            "categories": [
+              "chromium_android"
+            ]
+          },
+          "Android Tests": {
+            "categories": [
+              "chromium_android"
+            ]
+          },
+          "Android Clang Builder (dbg)": {
+            "categories": [
+              "chromium_android"
+            ]
+          },
+          "Android Webview AOSP Builder": {
+            "categories": [
+              "chromium_android"
+            ]
+          },
+          "Android GN": {
+            "categories": [
+              "chromium_android"
+            ]
+          },
+          "*": {}
+        }
+      }
+    ],
+    "https://build.chromium.org/p/chromium.lkgr": [
+      {
+        "tree_notify": [
+          "jschuh@chromium.org",
+          "scottmg@chromium.org",
+          "wfh@chromium.org"
+        ],
+
+        "builders": {
+          "Win x64": {
+            "categories": [
+              "chromium_archive_build",
+              "chromium_compile",
+              "chromium_windows"
+            ]
+          }
+        }
+      },
+      {
+        "tree_notify": [
+          "chrome-security-sheriff@grotations.appspotmail.com"
+        ],
+
+        "subject_template": "LKGR build failure on %(builder_name)s",
+
+        "forgive_all": true,
+        "builders": {
+          "*": {}
+        }
+      }
+    ],
+    "https://build.chromium.org/p/chromium.mac": [
+      {
+        "categories": [
+          "chromium_tree_closer"
+        ],
+        "comment": [
+          "TODO(dpranke): crbug.com/486089, crbug.com/439402",
+          "Until the Mac GN (dbg) bot is in the CQ, it should not close the",
+          "tree."
+        ],
+        "builders": {
+          "ios-device": {
+            "sheriff_classes": ["sheriff_ios_europe", "sheriff_ios_us"]
+          },
+          "ios-simulator": {
+            "sheriff_classes": ["sheriff_ios_europe", "sheriff_ios_us"],
+            "closing_optional": [],
+            "comment": ["closing_optional due to crbug.com/393861"]
+          },
+          "Mac GN (dbg)": {
+            "close_tree": false
+          },
+          "*": {}
+        }
+      }
+    ],
+    "https://build.chromium.org/p/chromium.memory": [
+      {
+        "categories": [
+          "chromium_tree_closer"
+        ],
+        "builders": {
+          "*": {}
+        }
+      }
+    ],
+    "https://build.chromium.org/p/chromium.memory.fyi": [
+      {
+        "categories": [
+          "chromium_memory_fyi"
+        ],
+        "sheriff_classes": ["sheriff_memory"],
+
+        "builders": {
+          "Chromium Linux MSan Builder": {},
+          "Linux MSan Tests": {},
+          "Chromium Linux ChromeOS MSan Builder": {},
+          "Linux ChromeOS MSan Tests": {}
+        }
+      }
+    ],
+    "https://build.chromium.org/p/chromium.perf": [
+      {
+        "forgive_all": "true",
+
+        "subject_template": "%(project_name)s %(builder_name)s %(result)s",
+
+        "categories": [
+          "chromium_perf_steps"
+        ],
+
+        "builders": {
+          "*": {}
+        }
+      }
+    ],
+    "https://build.chromium.org/p/chromium.tools.build": [
+      {
+        "builders": {
+          "cipd-test-end-to-end_mac": {
+            "closing_optional": [
+              "*"
+            ]
+          },
+          "cipd-test-end-to-end_trusty64": {
+            "closing_optional": [
+              "*"
+            ]
+          },
+          "cipd-test-end-to-end_win64": {
+            "closing_optional": [
+              "*"
+            ]
+          }
+        },
+        "forgive_all": "true",
+        "tree_notify": [
+          "tandrii+build-recipes-end-to-end@google.com"
+        ]
+      }
+    ],
+    "https://build.chromium.org/p/chromium.webkit": [
+      {
+        "categories": [
+          "chromium_tree_closer"
+        ],
+        "builders": {
+          "*": {}
+        }
+      }
+    ],
+    "https://build.chromium.org/p/chromium.win": [
+      {
+        "categories": [
+          "chromium_tree_closer"
+        ],
+
+        "comment": [
+          "TODO(dpranke): crbug.com/486089, crbug.com/439402",
+          "Until the GN bots are in the CQ, they should not close the tree."
+        ],
+        "builders": {
+          "Win x64 GN": {
+            "close_tree": false
+          },
+          "Win x64 GN (dbg)": {
+            "close_tree": false
+          },
+          "Win8 GN (dbg)": {
+            "close_tree": false
+          },
+          "*": {}
+        }
+      }
+    ],
+    "https://build.chromium.org/p/client.boringssl": [
+      {
+        "tree_notify": [
+          "davidben+boringssl@google.com",
+          "agl+boringssl@google.com",
+          "boringssl-dev+build@chromium.org"
+        ],
+
+        "forgive_all": "true",
+
+        "builders": {
+          "*": {
+            "closing_optional": [
+              "*"
+            ]
+          }
+        }
+      }
+    ],
+    "https://build.chromium.org/p/client.crashpad": [
+      {
+        "builders": {
+          "*": {
+            "closing_optional": [
+              "*"
+            ]
+          }
+        }
+      }
+    ],
+    "https://build.chromium.org/p/client.catapult": [
+      {
+        "forgive_all": "true",
+        "tree_notify": [
+          "catapult-sheriff@chromium.org"
+        ],
+        "builders": {
+          "*": {}
+        }
+      }
+    ],
+    "https://build.chromium.org/p/client.libvpx": [
+      {
+        "tree_notify": [
+          "vpx-eng@google.com"
+        ],
+
+        "forgive_all": "true",
+
+        "builders": {
+          "*": {
+            "closing_optional": [
+              "*"
+            ]
+          }
+        }
+      }
+    ],
+    "https://build.chromium.org/p/client.nacl": [
+      {
+        "categories": [
+          "nacl_all"
+        ],
+        "sheriff_classes": ["sheriff_nacl"],
+        "excluded_builders" : [
+            "precise_64-newlib-arm_qemu-pnacl-buildonly-spec",
+            "oneiric_32-newlib-arm_hw-pnacl-panda-spec"
+        ],
+        "builders": {
+          "*": {}
+        },
+        "tree_notify": [
+            "bradnelson+nacl-gatekeeper@chromium.org"
+        ]
+      }
+    ],
+    "https://build.chromium.org/p/client.nacl.sdk": [
+      {
+        "forgive_all": true,
+        "categories": [
+          "nacl_all"
+        ],
+        "builders": {
+          "*": {}
+        },
+        "tree_notify": [
+            "bradnelson@chromium.org",
+            "sbc@chromium.org",
+            "binji@chromium.org"
+        ]
+      }
+    ],
+    "https://build.chromium.org/p/client.nacl.ports": [
+      {
+        "categories": [
+          "nacl_all"
+        ],
+        "sheriff_classes": ["sheriff_nacl"],
+        "builders": {
+          "*": {}
+        },
+        "tree_notify": [
+            "bradnelson@chromium.org"
+        ]
+      }
+    ],
+    "https://build.chromium.org/p/client.pdfium": [
+      {
+        "categories": [
+          "pdfium_all"
+        ],
+        "excluded_builders" : [
+          "drm_win_xfa"
+        ],
+        "builders": {
+          "*": {}
+        },
+        "tree_notify": [
+            "thestig@chromium.org",
+            "tsepez@chromium.org"
+        ]
+      }
+    ],
+    "https://build.chromium.org/p/client.v8": [
+      {
+        "excluded_builders" : [
+          "V8 Linux - swarming staging",
+          "V8 Linux64 - cfi",
+          "V8 Linux64 - gcov coverage",
+          "V8 Linux - full debug",
+          "V8 Linux - interpreted regexp",
+          "V8 Random Deopt Fuzzer - debug"
+        ],
+        "builders": {
+          "V8 Linux - predictable": {
+            "categories": [
+              "v8_compile"
+            ]
+          },
+          "*": {
+            "categories": [
+              "v8_all"
+            ]
+          }
+        }
+      }
+    ],
+    "https://build.chromium.org/p/client.v8.ports": [
+      {
+        "categories": [
+          "v8_all"
+        ],
+        "excluded_builders" : [
+          "V8 Arm",
+          "V8 Arm - debug",
+          "V8 Arm GC Stress",
+          "V8 Linux - mipsel - sim",
+          "V8 Mips - big endian - nosnap - 1",
+          "V8 Mips - big endian - nosnap - 2",
+          "V8 Linux - ppc - sim",
+          "V8 Linux - ppc64 - sim",
+          "V8 Linux - s390 - sim",
+          "V8 Linux - s390x - sim",
+          "V8 Linux - x87 - nosnap - debug builder",
+          "V8 Linux - x87 - nosnap - debug"
+        ],
+        "builders": {
+          "*": {}
+        }
+      }
+    ],
+    "https://build.chromium.org/p/client.v8.fyi": [
+      {
+        "categories": [
+          "v8_compile"
+        ],
+        "excluded_builders" : [
+          "Linux Snapshot Builder",
+          "Chromium Win SyzyASAN"
+        ],
+        "builders": {
+          "*": {}
+        }
+      }
+    ],
+    "https://build.chromium.org/p/client.webrtc": [
+      {
+        "tree_notify": [
+          "webrtc-sheriff-mtv@grotations.appspotmail.com",
+          "webrtc-sheriff-sto@grotations.appspotmail.com"
+        ],
+        "categories": [
+          "chromium_tree_closer"
+        ],
+        "builders": {
+          "*": { "categories": [ "webrtc_all"] }
+        },
+        "excluded_builders": [
+          "Android*Tests*"
+        ]
+      }
+    ],
+    "https://build.chromium.org/p/chromium.fyi": [
+      {
+        "builders": {
+          "Closure Compilation Linux": {
+            "tree_notify": [
+              "dbeam+closure-bots@chromium.org",
+              "fukino+closure-bots@chromium.org",
+              "hirono+closure-bots@chromium.org",
+              "vitalyp@chromium.org"
+            ],
+            "forgiving_steps": [
+              "update_scripts",
+              "setup_build",
+              "bot_update"
+            ],
+            "closing_steps": [
+              "generate_gyp_files",
+              "compile",
+              "generate_v2_gyp_files",
+              "compile_v2"
+            ]
+          },
+          "Linux V8 API Stability": {
+            "tree_notify": [
+              "machenbach@chromium.org",
+              "hablich@chromium.org"
+            ],
+            "forgive_all": "true",
+            "closing_optional": [
+              "compile"
+            ],
+            "subject_template": "V8 API checker %(result)s in %(project_name)s, revision %(revision)s"
+          },
+          "WebKit Linux - TraceWrappables": {
+            "tree_notify": [
+              "hlopko@chromium.org"
+            ],
+            "forgive_all": "true",
+            "closing_optional": [
+              "webkit_tests"
+            ]
+          },
+          "Site Isolation Linux": {
+            "tree_notify": [
+              "nasko+fyi-bots@chromium.org",
+              "creis+fyi-bots@chromium.org",
+              "alexmos+fyi-bots@chromium.org"
+            ],
+            "forgiving_steps": [
+              "*"
+            ]
+          },
+          "Site Isolation Win": {
+            "tree_notify": [
+              "nasko+fyi-bots@chromium.org",
+              "creis+fyi-bots@chromium.org",
+              "alexmos+fyi-bots@chromium.org"
+            ],
+            "forgiving_steps": [
+              "*"
+            ]
+          },
+          "Windows LKGR (DrMemory)": {
+            "tree_notify": [
+              "bruening@chromium.org",
+              "zhaoqin@chromium.org"
+            ],
+            "forgiving_steps": [
+              "compile"
+            ],
+            "subject_template": "LKGR buildbot %(result)s in %(project_name)s on %(builder_name)s, revision %(revision)s"
+          },
+          "Win SyzyASAN LKGR": {
+            "tree_notify": [
+              "syzyzy-team@chromium.org"
+            ],
+            "forgiving_steps": [
+              "compile"
+            ],
+            "subject_template": "buildbot %(result)s in %(project_name)s on %(builder_name)s, revision %(revision)s"
+          },
+          "CFI Linux": {
+            "tree_notify": [
+              "krasin@chromium.org"
+            ],
+            "forgive_all": "true",
+            "subject_template": "buildbot %(result)s in %(project_name)s on %(builder_name)s, revision %(revision)s"
+          },
+          "CFI Linux ToT": {
+            "tree_notify": [
+              "krasin@chromium.org"
+            ],
+            "forgive_all": "true",
+            "subject_template": "buildbot %(result)s in %(project_name)s on %(builder_name)s, revision %(revision)s"
+          },
+          "CFI Linux CF": {
+            "tree_notify": [
+              "krasin@chromium.org"
+            ],
+            "forgive_all": "true",
+            "subject_template": "buildbot %(result)s in %(project_name)s on %(builder_name)s, revision %(revision)s"
+          },
+          "Chromium Win 10": {
+            "tree_notify": [
+              "wfh@chromium.org"
+            ],
+            "forgive_all": "true"
+          }
+        }
+      }
+    ]
+  },
+
+  "categories": {
+    "chromium_memory_fyi": {
+      "closing_optional": [
+        "*"
+      ]
+    },
+
+    "chromium_tree_closer": {
+      "closing_optional": [
+        "bot_update",
+        "compile",
+        "gclient runhooks",
+        "runhooks",
+        "update"
+      ],
+      "sheriff_classes": ["sheriff"],
+      "status_template": "Tree is closed (Automatic: \"%(unsatisfied)s\" on %(build_url)s \"%(builder_name)s\" from %(revision)s: %(blamelist)s)"
+    },
+
+    "chromium_windows": {
+      "forgiving_optional": [
+        "svnkill",
+        "taskkill"
+      ]
+    },
+
+    "chromium_compile": {
+      "closing_optional": [
+        "compile"
+      ]
+    },
+
+    "chromium_archive_build": {
+      "forgiving_optional": [
+        "archive_build"
+      ]
+    },
+
+    "chromium_perf_steps": {
+      "closing_optional": [
+        "*"
+      ]
+    },
+    "chromium_android": {
+      "excluded_steps": [
+        "slave_steps"
+      ],
+      "forgiving_optional": [
+        "compile"
+      ],
+      "sheriff_classes": ["sheriff_android"]
+    },
+    "infra_tree_closer": {
+      "forgiving_optional": [
+        "update_scripts",
+        "steps"
+      ],
+      "closing_optional": [
+        "*"
+      ],
+      "status_template": "Tree is closed (Automatic: \"%(unsatisfied)s\" on %(build_url)s \"%(builder_name)s\" from %(revision)s: %(blamelist)s)",
+      "tree_notify": [
+        "tandrii+infra-continuous-self-appointed-gardener@google.com"
+      ]
+    },
+    "chromium_gnumbd_closer": {
+      "closing_optional": [
+        "gnumbd"
+      ],
+      "sheriff_classes": [
+        "trooper"
+      ],
+      "tree_notify": [
+        "chrome-troopers+alerts-staging@google.com"
+      ],
+      "status_template": "Auto-closed (Infra Gnumbd cron \"%(builder_name)s\" %(build_url)s failed)",
+      "subject_template": "Tree-closing infra failure on %(builder_name)s"
+    },
+    "nacl_all": {
+      "closing_optional": [
+        "compile",
+        "gn",
+        "gclient runhooks",
+        "runhooks",
+        "Presubmit",
+        "Static-Initializers",
+        "Check",
+        "Unittests",
+        "OptimizeForSize",
+        "Mjsunit",
+        "Webkit",
+        "Benchmarks",
+        "Test262",
+        "Test262-es6",
+        "Mozilla",
+        "GCMole arm",
+        "GCMole arm64",
+        "GCMole ia32",
+        "GCMole x64",
+        "Simple Leak Check"
+      ],
+      "forgiving_optional": [
+        "update_scripts",
+        "update",
+        "annotate"
+      ],
+      "subject_template": "buildbot %(result)s in %(project_name)s on %(builder_name)s, revision %(revision)s"
+    },
+    "pdfium_all": {
+      "closing_optional": [
+        "*"
+      ],
+      "forgiving_optional": [
+        "update_scripts",
+        "steps"
+      ]
+    },
+    "v8_all": {
+      "closing_optional": [
+        "*"
+      ],
+      "excluded_steps": [
+        "Failure reason",
+        "update_scripts",
+        "steps"
+      ],
+      "forgiving_optional": [
+        "bot_update",
+        "isolate tests",
+        "package build",
+        "extract build",
+        "cleanup_temp",
+        "gsutil upload",
+        "taskkill"
+      ],
+      "status_template": "Tree is closed (Automatic: \"%(unsatisfied)s\" on %(build_url)s \"%(builder_name)s\" from %(revision)s: %(blamelist)s)"
+    },
+    "v8_compile": {
+      "closing_optional": [
+        "compile",
+        "gn",
+        "gclient runhooks"
+      ],
+      "forgiving_optional": [
+        "bot_update",
+        "isolate tests",
+        "package build",
+        "extract build",
+        "cleanup_temp",
+        "gsutil upload",
+        "taskkill"
+      ],
+      "status_template": "Tree is closed (Automatic: \"%(unsatisfied)s\" on %(build_url)s \"%(builder_name)s\" from %(revision)s: %(blamelist)s)"
+    },
+    "webrtc_all": {
+      "forgiving_optional": [
+        "bot_update",
+        "package build",
+        "extract build",
+        "cleanup_temp",
+        "taskkill"
+      ],
+      "closing_optional": [
+        "compile",
+        "gn"
+      ]
+    }
+  }
+}

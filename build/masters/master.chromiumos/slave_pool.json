@@ -1,0 +1,55 @@
+{
+  "class_map": {
+    "builder": {
+      "amd64-generic-full": [
+        "build162-m2"
+      ], 
+      "amd64-generic-incremental": [
+        "build86-m2"
+      ], 
+      "amd64-generic-paladin": [
+        "build257-m2"
+      ], 
+      "arm-generic-full": [
+        "build92-m2"
+      ], 
+      "arm-generic-paladin": [
+        "build263-m2"
+      ], 
+      "chromiumos-sdk": [
+        "build112-m2"
+      ], 
+      "daisy-full": [
+        "build326-m2"
+      ], 
+      "daisy-incremental": [
+        "build87-m2"
+      ], 
+      "oak-full": [
+        "build323-m2"
+      ], 
+      "x86-generic-full": [
+        "build182-m2"
+      ], 
+      "x86-generic-incremental": [
+        "build85-m2"
+      ], 
+      "x86-generic-paladin": [
+        "build174-m2"
+      ]
+    }, 
+    "builder_shared": {
+      "amd64-generic-asan": [
+        "build84-m2"
+      ], 
+      "x86-generic-asan": [
+        "build84-m2"
+      ]
+    }
+  }, 
+  "unallocated": [
+    "cros199-c2", 
+    "build203-m2", 
+    "build94-m2"
+  ]
+}

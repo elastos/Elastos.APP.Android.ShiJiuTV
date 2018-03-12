@@ -1,0 +1,16 @@
+{
+  "format_version": "1",
+  "package_name": "infra/tools/luci/led/linux-amd64",
+  "version_file": ".versions/led.cipd_version",
+  "files": [
+    {
+      "name": "led",
+      "size": 12260249,
+      "executable": true
+    },
+    {
+      "name": ".versions/led.cipd_version",
+      "size": 117
+    }
+  ]
+}

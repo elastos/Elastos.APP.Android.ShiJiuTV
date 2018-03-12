@@ -1,0 +1,40 @@
+[
+  {
+    "cmd": [
+      "echo",
+      "billy"
+    ],
+    "env": {
+      "climate": "rainy",
+      "mood": "excellent"
+    },
+    "name": "grandparent.mom.child"
+  },
+  {
+    "cmd": [
+      "echo",
+      "sam"
+    ],
+    "env": {
+      "climate": "cloudy",
+      "mood": "excellent"
+    },
+    "name": "grandparent.dad.child"
+  },
+  {
+    "cmd": [
+      "echo",
+      "testb"
+    ],
+    "env": {
+      "climate": "sunny",
+      "mood": "excellent"
+    },
+    "name": "grandparent.aunt"
+  },
+  {
+    "name": "$result",
+    "recipe_result": null,
+    "status_code": 0
+  }
+]

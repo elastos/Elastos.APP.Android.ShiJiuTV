@@ -1,0 +1,93 @@
+{
+  "master_base_class": "Master4a",
+  "master_classname": "CatapultTryserver",
+  "master_port": 21400,
+  "master_port_alt": 41400,
+  "slave_port": 31400,
+  "templates": ["../master.chromium/templates"],
+
+  "service_account_file": "service-account-chromium-tryserver.json",
+  "buildbucket_bucket": "master.tryserver.client.catapult",
+
+  "builders": {
+    "Catapult Presubmit": {
+      "recipe": "run_presubmit",
+      "properties": {
+        "repo_name": "catapult",
+      },
+      "scheduler": None,
+      "slave_pools": ["linux_slave_pool"],
+      "slavebuilddir": "presubmit_catapult",
+    },
+    "Catapult Android Tryserver": {
+      "recipe": "catapult",
+      "scheduler": None,
+      "slave_pools": ["android_slave_pool"],
+      "slavebuilddir": "catapult",
+      "properties": {
+        "platform": "android",
+      },
+    },
+    "Catapult Linux Tryserver": {
+      "recipe": "catapult",
+      "scheduler": None,
+      "slave_pools": ["linux_slave_pool"],
+
+      "slavebuilddir": "catapult",
+    },
+    "Catapult Mac Tryserver": {
+      "recipe": "catapult",
+      "scheduler": None,
+      "slave_pools": ["mac_slave_pool"],
+
+      "slavebuilddir": "catapult",
+    },
+    "Catapult Windows Tryserver": {
+      "recipe": "catapult",
+      "scheduler": None,
+      "slave_pools": ["win_slave_pool"],
+
+      "slavebuilddir": "catapult",
+    },
+  },
+
+  "schedulers": {},
+
+  "slave_pools": {
+    "android_slave_pool": {
+      "slave_data": {
+        "bits": 64,
+        "os": "linux",
+        "version": "precise",
+      },
+      "slaves": [
+        "build1-b3",
+        "build37-b4",
+      ],
+    },
+    "linux_slave_pool": {
+      "slave_data": {
+        "bits": 64,
+        "os": "linux",
+        "version": "precise",
+      },
+      "slaves": ["slave425-c4"],
+    },
+    "mac_slave_pool": {
+      "slave_data": {
+        "bits": 64,
+        "os": "mac",
+        "version": "10.9",
+      },
+      "slaves": ["vm600-m4"],
+    },
+    "win_slave_pool": {
+      "slave_data": {
+        "bits": 64,
+        "os": "win",
+        "version": "win10",
+      },
+      "slaves": ["build78-b1", "build79-b1"],
+    },
+  },
+}

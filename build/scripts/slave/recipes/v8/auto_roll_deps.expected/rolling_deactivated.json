@@ -1,0 +1,51 @@
+[
+  {
+    "cmd": [
+      "python",
+      "-u",
+      "RECIPE_PACKAGE_REPO[build]/scripts/tools/runit.py",
+      "--show-path",
+      "python",
+      "RECIPE_PACKAGE_REPO[build]/scripts/slave/cleanup_temp.py"
+    ],
+    "name": "cleanup_temp"
+  },
+  {
+    "cmd": [
+      "python",
+      "-u",
+      "[BUILD]/scripts/tools/runit.py",
+      "[BUILD]/scripts/tools/pycurl.py",
+      "https://v8-roll.appspot.com/status"
+    ],
+    "name": "check roll status",
+    "stdout": "/path/to/tmp/",
+    "~followup_annotations": [
+      "@@@STEP_TEXT@Rolling deactivated@@@",
+      "@@@STEP_LOG_LINE@stdout@0@@@",
+      "@@@STEP_LOG_END@stdout@@@"
+    ]
+  },
+  {
+    "cmd": [
+      "python",
+      "-u",
+      "/opt/infra-python/run.py",
+      "infra.tools.send_ts_mon_values",
+      "--ts-mon-target-type",
+      "task",
+      "--ts-mon-task-service-name",
+      "auto-roll",
+      "--ts-mon-task-job-name",
+      "roll",
+      "--counter",
+      "{\"name\": \"/v8/autoroller/count\", \"project\": \"v8-roll\", \"result\": \"deactivated\", \"value\": 1}"
+    ],
+    "name": "upload stats"
+  },
+  {
+    "name": "$result",
+    "recipe_result": null,
+    "status_code": 0
+  }
+]

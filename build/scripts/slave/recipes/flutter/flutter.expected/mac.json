@@ -1,0 +1,340 @@
+[
+  {
+    "cmd": [
+      "python",
+      "-u",
+      "\nimport os, sys\nfrom common import chromium_utils # Error? See https://crbug.com/584783.\n\npath = sys.argv[1]\nif os.path.exists(path):\n  for p in (os.path.join(path, x) for x in os.listdir(path)):\n    if os.path.isdir(p):\n      chromium_utils.RemoveDirectory(p)\n    else:\n      os.unlink(p)\n",
+      "[SLAVE_BUILD]"
+    ],
+    "name": "rmcontents everything",
+    "~followup_annotations": [
+      "@@@STEP_LOG_LINE@python.inline@@@@",
+      "@@@STEP_LOG_LINE@python.inline@import os, sys@@@",
+      "@@@STEP_LOG_LINE@python.inline@from common import chromium_utils # Error? See https://crbug.com/584783.@@@",
+      "@@@STEP_LOG_LINE@python.inline@@@@",
+      "@@@STEP_LOG_LINE@python.inline@path = sys.argv[1]@@@",
+      "@@@STEP_LOG_LINE@python.inline@if os.path.exists(path):@@@",
+      "@@@STEP_LOG_LINE@python.inline@  for p in (os.path.join(path, x) for x in os.listdir(path)):@@@",
+      "@@@STEP_LOG_LINE@python.inline@    if os.path.isdir(p):@@@",
+      "@@@STEP_LOG_LINE@python.inline@      chromium_utils.RemoveDirectory(p)@@@",
+      "@@@STEP_LOG_LINE@python.inline@    else:@@@",
+      "@@@STEP_LOG_LINE@python.inline@      os.unlink(p)@@@",
+      "@@@STEP_LOG_END@python.inline@@@"
+    ]
+  },
+  {
+    "cmd": [
+      "python",
+      "-u",
+      "RECIPE_MODULE[depot_tools::git]/resources/git_setup.py",
+      "--path",
+      "[SLAVE_BUILD]/flutter",
+      "--url",
+      "https://chromium.googlesource.com/external/github.com/flutter/flutter"
+    ],
+    "name": "git setup"
+  },
+  {
+    "cmd": [
+      "git",
+      "retry",
+      "fetch",
+      "origin",
+      "master",
+      "--recurse-submodules"
+    ],
+    "cwd": "[SLAVE_BUILD]/flutter",
+    "name": "git fetch"
+  },
+  {
+    "cmd": [
+      "git",
+      "checkout",
+      "-f",
+      "FETCH_HEAD"
+    ],
+    "cwd": "[SLAVE_BUILD]/flutter",
+    "name": "git checkout"
+  },
+  {
+    "cmd": [
+      "git",
+      "rev-parse",
+      "HEAD"
+    ],
+    "cwd": "[SLAVE_BUILD]/flutter",
+    "name": "read revision",
+    "stdout": "/path/to/tmp/",
+    "~followup_annotations": [
+      "@@@STEP_TEXT@<br/>checked out 'deadbeef'<br/>@@@",
+      "@@@SET_BUILD_PROPERTY@got_revision@\"deadbeef\"@@@"
+    ]
+  },
+  {
+    "cmd": [
+      "git",
+      "clean",
+      "-f",
+      "-d",
+      "-x"
+    ],
+    "cwd": "[SLAVE_BUILD]/flutter",
+    "name": "git clean"
+  },
+  {
+    "cmd": [
+      "git",
+      "submodule",
+      "sync"
+    ],
+    "cwd": "[SLAVE_BUILD]/flutter",
+    "name": "submodule sync"
+  },
+  {
+    "cmd": [
+      "git",
+      "submodule",
+      "update",
+      "--init",
+      "--recursive"
+    ],
+    "cwd": "[SLAVE_BUILD]/flutter",
+    "name": "submodule update"
+  },
+  {
+    "cmd": [
+      "[SLAVE_BUILD]/flutter/dev/bots/download_android_tools.py"
+    ],
+    "name": "download android tools"
+  },
+  {
+    "cmd": [
+      "python",
+      "-u",
+      "[BUILD]/scripts/slave/ios/find_xcode.py",
+      "--json-file",
+      "/path/to/tmp/json"
+    ],
+    "env": {
+      "ANDROID_HOME": "[SLAVE_BUILD]/flutter/dev/bots/android_tools",
+      "PATH": "[SLAVE_BUILD]/flutter/bin:[SLAVE_BUILD]/flutter/bin/cache/dart-sdk/bin:%(PATH)s",
+      "PUB_CACHE": "[SLAVE_BUILD]/.pub-cache"
+    },
+    "name": "enumerate_xcode_installations",
+    "~followup_annotations": [
+      "@@@STEP_LOG_LINE@json.output@{@@@",
+      "@@@STEP_LOG_LINE@json.output@  \"installations\": {@@@",
+      "@@@STEP_LOG_LINE@json.output@    \"/some/path\": \"7.2.1 build_number\"@@@",
+      "@@@STEP_LOG_LINE@json.output@  }@@@",
+      "@@@STEP_LOG_LINE@json.output@}@@@",
+      "@@@STEP_LOG_END@json.output@@@"
+    ]
+  },
+  {
+    "cmd": [
+      "python",
+      "-u",
+      "[BUILD]/scripts/slave/ios/find_xcode.py",
+      "--json-file",
+      "/path/to/tmp/json",
+      "--version",
+      "7.2.1"
+    ],
+    "env": {
+      "ANDROID_HOME": "[SLAVE_BUILD]/flutter/dev/bots/android_tools",
+      "PATH": "[SLAVE_BUILD]/flutter/bin:[SLAVE_BUILD]/flutter/bin/cache/dart-sdk/bin:%(PATH)s",
+      "PUB_CACHE": "[SLAVE_BUILD]/.pub-cache"
+    },
+    "name": "set_xcode_version",
+    "~followup_annotations": [
+      "@@@STEP_LOG_LINE@json.output@{}@@@",
+      "@@@STEP_LOG_END@json.output@@@"
+    ]
+  },
+  {
+    "cmd": [
+      "dev/bots/setup.sh"
+    ],
+    "cwd": "[SLAVE_BUILD]/flutter",
+    "env": {
+      "ANDROID_HOME": "[SLAVE_BUILD]/flutter/dev/bots/android_tools",
+      "PATH": "[SLAVE_BUILD]/flutter/bin:[SLAVE_BUILD]/flutter/bin/cache/dart-sdk/bin:%(PATH)s",
+      "PUB_CACHE": "[SLAVE_BUILD]/.pub-cache"
+    },
+    "name": "setup.sh"
+  },
+  {
+    "cmd": [
+      "flutter",
+      "build",
+      "apk"
+    ],
+    "cwd": "[SLAVE_BUILD]/flutter/examples/stocks",
+    "env": {
+      "ANDROID_HOME": "[SLAVE_BUILD]/flutter/dev/bots/android_tools",
+      "PATH": "[SLAVE_BUILD]/flutter/bin:[SLAVE_BUILD]/flutter/bin/cache/dart-sdk/bin:%(PATH)s",
+      "PUB_CACHE": "[SLAVE_BUILD]/.pub-cache"
+    },
+    "name": "flutter build apk stocks"
+  },
+  {
+    "cmd": [
+      "flutter",
+      "build",
+      "ios",
+      "--no-codesign"
+    ],
+    "cwd": "[SLAVE_BUILD]/flutter/examples/stocks",
+    "env": {
+      "ANDROID_HOME": "[SLAVE_BUILD]/flutter/dev/bots/android_tools",
+      "PATH": "[SLAVE_BUILD]/flutter/bin:[SLAVE_BUILD]/flutter/bin/cache/dart-sdk/bin:%(PATH)s",
+      "PUB_CACHE": "[SLAVE_BUILD]/.pub-cache"
+    },
+    "name": "flutter build ios stocks"
+  },
+  {
+    "cmd": [
+      "flutter",
+      "build",
+      "ios",
+      "--simulator"
+    ],
+    "cwd": "[SLAVE_BUILD]/flutter/examples/stocks",
+    "env": {
+      "ANDROID_HOME": "[SLAVE_BUILD]/flutter/dev/bots/android_tools",
+      "PATH": "[SLAVE_BUILD]/flutter/bin:[SLAVE_BUILD]/flutter/bin/cache/dart-sdk/bin:%(PATH)s",
+      "PUB_CACHE": "[SLAVE_BUILD]/.pub-cache"
+    },
+    "name": "flutter build ios simulator stocks"
+  },
+  {
+    "cmd": [
+      "flutter",
+      "build",
+      "apk"
+    ],
+    "cwd": "[SLAVE_BUILD]/flutter/examples/flutter_gallery",
+    "env": {
+      "ANDROID_HOME": "[SLAVE_BUILD]/flutter/dev/bots/android_tools",
+      "PATH": "[SLAVE_BUILD]/flutter/bin:[SLAVE_BUILD]/flutter/bin/cache/dart-sdk/bin:%(PATH)s",
+      "PUB_CACHE": "[SLAVE_BUILD]/.pub-cache"
+    },
+    "name": "flutter build apk flutter_gallery"
+  },
+  {
+    "cmd": [
+      "flutter",
+      "build",
+      "ios",
+      "--no-codesign"
+    ],
+    "cwd": "[SLAVE_BUILD]/flutter/examples/flutter_gallery",
+    "env": {
+      "ANDROID_HOME": "[SLAVE_BUILD]/flutter/dev/bots/android_tools",
+      "PATH": "[SLAVE_BUILD]/flutter/bin:[SLAVE_BUILD]/flutter/bin/cache/dart-sdk/bin:%(PATH)s",
+      "PUB_CACHE": "[SLAVE_BUILD]/.pub-cache"
+    },
+    "name": "flutter build ios flutter_gallery"
+  },
+  {
+    "cmd": [
+      "flutter",
+      "build",
+      "ios",
+      "--simulator"
+    ],
+    "cwd": "[SLAVE_BUILD]/flutter/examples/flutter_gallery",
+    "env": {
+      "ANDROID_HOME": "[SLAVE_BUILD]/flutter/dev/bots/android_tools",
+      "PATH": "[SLAVE_BUILD]/flutter/bin:[SLAVE_BUILD]/flutter/bin/cache/dart-sdk/bin:%(PATH)s",
+      "PUB_CACHE": "[SLAVE_BUILD]/.pub-cache"
+    },
+    "name": "flutter build ios simulator flutter_gallery"
+  },
+  {
+    "cmd": [
+      "killall",
+      "Simulator"
+    ],
+    "cwd": "[TMP_BASE]/tmp_tmp_1",
+    "env": {
+      "ANDROID_HOME": "[SLAVE_BUILD]/flutter/dev/bots/android_tools",
+      "PATH": "[SLAVE_BUILD]/flutter/bin:[SLAVE_BUILD]/flutter/bin/cache/dart-sdk/bin:%(PATH)s",
+      "PUB_CACHE": "[SLAVE_BUILD]/.pub-cache"
+    },
+    "name": "shutdown simulator"
+  },
+  {
+    "cmd": [
+      "/usr/bin/xcrun",
+      "simctl",
+      "erase",
+      "all"
+    ],
+    "cwd": "[TMP_BASE]/tmp_tmp_1",
+    "env": {
+      "ANDROID_HOME": "[SLAVE_BUILD]/flutter/dev/bots/android_tools",
+      "PATH": "[SLAVE_BUILD]/flutter/bin:[SLAVE_BUILD]/flutter/bin/cache/dart-sdk/bin:%(PATH)s",
+      "PUB_CACHE": "[SLAVE_BUILD]/.pub-cache"
+    },
+    "name": "erase simulator"
+  },
+  {
+    "cmd": [
+      "flutter",
+      "create",
+      "--with-driver-test",
+      "sample_app"
+    ],
+    "cwd": "[TMP_BASE]/tmp_tmp_1",
+    "env": {
+      "ANDROID_HOME": "[SLAVE_BUILD]/flutter/dev/bots/android_tools",
+      "PATH": "[SLAVE_BUILD]/flutter/bin:[SLAVE_BUILD]/flutter/bin/cache/dart-sdk/bin:%(PATH)s",
+      "PUB_CACHE": "[SLAVE_BUILD]/.pub-cache"
+    },
+    "name": "test create"
+  },
+  {
+    "cmd": [
+      "flutter",
+      "drive",
+      "--verbose"
+    ],
+    "cwd": "[TMP_BASE]/tmp_tmp_1/sample_app",
+    "env": {
+      "ANDROID_HOME": "[SLAVE_BUILD]/flutter/dev/bots/android_tools",
+      "PATH": "[SLAVE_BUILD]/flutter/bin:[SLAVE_BUILD]/flutter/bin/cache/dart-sdk/bin:%(PATH)s",
+      "PUB_CACHE": "[SLAVE_BUILD]/.pub-cache"
+    },
+    "name": "drive sample_app"
+  },
+  {
+    "cmd": [
+      "python",
+      "-u",
+      "\nimport os, sys\nfrom common import chromium_utils # Error? See https://crbug.com/584783.\n\n\nif os.path.exists(sys.argv[1]):\n  chromium_utils.RemoveDirectory(sys.argv[1])\n",
+      "[TMP_BASE]/tmp_tmp_1"
+    ],
+    "env": {
+      "ANDROID_HOME": "[SLAVE_BUILD]/flutter/dev/bots/android_tools",
+      "PATH": "[SLAVE_BUILD]/flutter/bin:[SLAVE_BUILD]/flutter/bin/cache/dart-sdk/bin:%(PATH)s",
+      "PUB_CACHE": "[SLAVE_BUILD]/.pub-cache"
+    },
+    "name": "rmtree temp dir",
+    "~followup_annotations": [
+      "@@@STEP_LOG_LINE@python.inline@@@@",
+      "@@@STEP_LOG_LINE@python.inline@import os, sys@@@",
+      "@@@STEP_LOG_LINE@python.inline@from common import chromium_utils # Error? See https://crbug.com/584783.@@@",
+      "@@@STEP_LOG_LINE@python.inline@@@@",
+      "@@@STEP_LOG_LINE@python.inline@@@@",
+      "@@@STEP_LOG_LINE@python.inline@if os.path.exists(sys.argv[1]):@@@",
+      "@@@STEP_LOG_LINE@python.inline@  chromium_utils.RemoveDirectory(sys.argv[1])@@@",
+      "@@@STEP_LOG_END@python.inline@@@"
+    ]
+  },
+  {
+    "name": "$result",
+    "recipe_result": null,
+    "status_code": 0
+  }
+]

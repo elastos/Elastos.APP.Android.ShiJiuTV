@@ -1,0 +1,281 @@
+[
+  {
+    "cmd": [
+      "[DEPOT_TOOLS]/repo",
+      "init",
+      "-u",
+      "https://android.googlesource.com/platform/manifest",
+      "-b",
+      "master-art"
+    ],
+    "name": "repo init"
+  },
+  {
+    "cmd": [
+      "[DEPOT_TOOLS]/repo",
+      "sync"
+    ],
+    "name": "repo sync"
+  },
+  {
+    "cmd": [
+      "python",
+      "-u",
+      "\nimport os, sys\nfrom common import chromium_utils # Error? See https://crbug.com/584783.\n\n\nif os.path.exists(sys.argv[1]):\n  chromium_utils.RemoveDirectory(sys.argv[1])\n",
+      "[SLAVE_BUILD]/out"
+    ],
+    "name": "rmtree clobber",
+    "~followup_annotations": [
+      "@@@STEP_LOG_LINE@python.inline@@@@",
+      "@@@STEP_LOG_LINE@python.inline@import os, sys@@@",
+      "@@@STEP_LOG_LINE@python.inline@from common import chromium_utils # Error? See https://crbug.com/584783.@@@",
+      "@@@STEP_LOG_LINE@python.inline@@@@",
+      "@@@STEP_LOG_LINE@python.inline@@@@",
+      "@@@STEP_LOG_LINE@python.inline@if os.path.exists(sys.argv[1]):@@@",
+      "@@@STEP_LOG_LINE@python.inline@  chromium_utils.RemoveDirectory(sys.argv[1])@@@",
+      "@@@STEP_LOG_END@python.inline@@@"
+    ]
+  },
+  {
+    "cmd": [
+      "[SLAVE_BUILD]/art/tools/buildbot-build.sh",
+      "-j8",
+      "--host"
+    ],
+    "env": {
+      "ANDROID_BUILD_TOP": "[SLAVE_BUILD]",
+      "ART_TEST_FULL": "false",
+      "ART_TEST_INTERPRETER": "true",
+      "ART_TEST_JIT": "true",
+      "ART_TEST_KEEP_GOING": "true",
+      "ART_TEST_OPTIMIZING": "true",
+      "ART_TEST_RUN_TEST_2ND_ARCH": "false",
+      "ART_TEST_RUN_TEST_DEBUG": "false",
+      "ART_TEST_RUN_TEST_NDEBUG": "true",
+      "ART_USE_OPTIMIZING_COMPILER": "true",
+      "HOST_PREFER_32_BIT": "true",
+      "JACK_REPOSITORY": "[SLAVE_BUILD]/prebuilts/sdk/tools/jacks",
+      "JACK_SERVER": "false",
+      "LEGACY_USE_JAVA7": "true",
+      "PATH": "[SLAVE_BUILD]/out/host/linux-x86/bin:%(PATH)s",
+      "SOONG_ALLOW_MISSING_DEPENDENCIES": "true",
+      "TARGET_BUILD_TYPE": "release",
+      "TARGET_BUILD_VARIANT": "eng",
+      "TARGET_PRODUCT": "sdk"
+    },
+    "name": "build sdk-eng"
+  },
+  {
+    "cmd": [
+      "make",
+      "-j8",
+      "test-art-host-gtest32"
+    ],
+    "env": {
+      "ANDROID_BUILD_TOP": "[SLAVE_BUILD]",
+      "ART_TEST_FULL": "false",
+      "ART_TEST_INTERPRETER": "true",
+      "ART_TEST_JIT": "true",
+      "ART_TEST_KEEP_GOING": "true",
+      "ART_TEST_OPTIMIZING": "true",
+      "ART_TEST_RUN_TEST_2ND_ARCH": "false",
+      "ART_TEST_RUN_TEST_DEBUG": "false",
+      "ART_TEST_RUN_TEST_NDEBUG": "true",
+      "ART_USE_OPTIMIZING_COMPILER": "true",
+      "HOST_PREFER_32_BIT": "true",
+      "JACK_REPOSITORY": "[SLAVE_BUILD]/prebuilts/sdk/tools/jacks",
+      "JACK_SERVER": "false",
+      "LEGACY_USE_JAVA7": "true",
+      "PATH": "[SLAVE_BUILD]/out/host/linux-x86/bin:%(PATH)s",
+      "SOONG_ALLOW_MISSING_DEPENDENCIES": "true",
+      "TARGET_BUILD_TYPE": "release",
+      "TARGET_BUILD_VARIANT": "eng",
+      "TARGET_PRODUCT": "sdk"
+    },
+    "name": "test gtest"
+  },
+  {
+    "cmd": [
+      "make",
+      "-j8",
+      "test-art-host-run-test-optimizing",
+      "dist"
+    ],
+    "env": {
+      "ANDROID_BUILD_TOP": "[SLAVE_BUILD]",
+      "ART_TEST_FULL": "false",
+      "ART_TEST_INTERPRETER": "true",
+      "ART_TEST_JIT": "true",
+      "ART_TEST_KEEP_GOING": "true",
+      "ART_TEST_OPTIMIZING": "true",
+      "ART_TEST_RUN_TEST_2ND_ARCH": "false",
+      "ART_TEST_RUN_TEST_DEBUG": "false",
+      "ART_TEST_RUN_TEST_DEBUGGABLE": "true",
+      "ART_TEST_RUN_TEST_NDEBUG": "true",
+      "ART_USE_OPTIMIZING_COMPILER": "true",
+      "HOST_PREFER_32_BIT": "true",
+      "JACK_REPOSITORY": "[SLAVE_BUILD]/prebuilts/sdk/tools/jacks",
+      "JACK_SERVER": "false",
+      "LEGACY_USE_JAVA7": "true",
+      "PATH": "[SLAVE_BUILD]/out/host/linux-x86/bin:%(PATH)s",
+      "SOONG_ALLOW_MISSING_DEPENDENCIES": "true",
+      "TARGET_BUILD_TYPE": "release",
+      "TARGET_BUILD_VARIANT": "eng",
+      "TARGET_PRODUCT": "sdk"
+    },
+    "name": "test optimizing"
+  },
+  {
+    "cmd": [
+      "make",
+      "-j5",
+      "test-art-host-run-test-interpreter",
+      "dist"
+    ],
+    "env": {
+      "ANDROID_BUILD_TOP": "[SLAVE_BUILD]",
+      "ART_TEST_FULL": "false",
+      "ART_TEST_INTERPRETER": "true",
+      "ART_TEST_JIT": "true",
+      "ART_TEST_KEEP_GOING": "true",
+      "ART_TEST_OPTIMIZING": "true",
+      "ART_TEST_RUN_TEST_2ND_ARCH": "false",
+      "ART_TEST_RUN_TEST_DEBUG": "false",
+      "ART_TEST_RUN_TEST_NDEBUG": "true",
+      "ART_USE_OPTIMIZING_COMPILER": "true",
+      "HOST_PREFER_32_BIT": "true",
+      "JACK_REPOSITORY": "[SLAVE_BUILD]/prebuilts/sdk/tools/jacks",
+      "JACK_SERVER": "false",
+      "LEGACY_USE_JAVA7": "true",
+      "PATH": "[SLAVE_BUILD]/out/host/linux-x86/bin:%(PATH)s",
+      "SOONG_ALLOW_MISSING_DEPENDENCIES": "true",
+      "TARGET_BUILD_TYPE": "release",
+      "TARGET_BUILD_VARIANT": "eng",
+      "TARGET_PRODUCT": "sdk"
+    },
+    "name": "test interpreter"
+  },
+  {
+    "cmd": [
+      "make",
+      "-j8",
+      "test-art-host-run-test-jit",
+      "dist"
+    ],
+    "env": {
+      "ANDROID_BUILD_TOP": "[SLAVE_BUILD]",
+      "ART_TEST_FULL": "false",
+      "ART_TEST_INTERPRETER": "true",
+      "ART_TEST_JIT": "true",
+      "ART_TEST_KEEP_GOING": "true",
+      "ART_TEST_OPTIMIZING": "true",
+      "ART_TEST_RUN_TEST_2ND_ARCH": "false",
+      "ART_TEST_RUN_TEST_DEBUG": "false",
+      "ART_TEST_RUN_TEST_NDEBUG": "true",
+      "ART_USE_OPTIMIZING_COMPILER": "true",
+      "HOST_PREFER_32_BIT": "true",
+      "JACK_REPOSITORY": "[SLAVE_BUILD]/prebuilts/sdk/tools/jacks",
+      "JACK_SERVER": "false",
+      "LEGACY_USE_JAVA7": "true",
+      "PATH": "[SLAVE_BUILD]/out/host/linux-x86/bin:%(PATH)s",
+      "SOONG_ALLOW_MISSING_DEPENDENCIES": "true",
+      "TARGET_BUILD_TYPE": "release",
+      "TARGET_BUILD_VARIANT": "eng",
+      "TARGET_PRODUCT": "sdk"
+    },
+    "name": "test jit"
+  },
+  {
+    "cmd": [
+      "[SLAVE_BUILD]/art/tools/run-libcore-tests.sh",
+      "--mode=host",
+      "--variant=X32"
+    ],
+    "env": {
+      "ANDROID_BUILD_TOP": "[SLAVE_BUILD]",
+      "ART_TEST_FULL": "false",
+      "ART_TEST_INTERPRETER": "true",
+      "ART_TEST_JIT": "true",
+      "ART_TEST_KEEP_GOING": "true",
+      "ART_TEST_OPTIMIZING": "true",
+      "ART_TEST_RUN_TEST_2ND_ARCH": "false",
+      "ART_TEST_RUN_TEST_DEBUG": "false",
+      "ART_TEST_RUN_TEST_NDEBUG": "true",
+      "ART_USE_OPTIMIZING_COMPILER": "true",
+      "HOST_PREFER_32_BIT": "true",
+      "JACK_REPOSITORY": "[SLAVE_BUILD]/prebuilts/sdk/tools/jacks",
+      "JACK_SERVER": "false",
+      "LEGACY_USE_JAVA7": "true",
+      "PATH": "[SLAVE_BUILD]/out/host/linux-x86/bin:%(PATH)s",
+      "SOONG_ALLOW_MISSING_DEPENDENCIES": "true",
+      "TARGET_BUILD_TYPE": "release",
+      "TARGET_BUILD_VARIANT": "eng",
+      "TARGET_PRODUCT": "sdk"
+    },
+    "name": "test libcore"
+  },
+  {
+    "cmd": [
+      "[SLAVE_BUILD]/art/tools/run-jdwp-tests.sh",
+      "--mode=host",
+      "--variant=X32"
+    ],
+    "env": {
+      "ANDROID_BUILD_TOP": "[SLAVE_BUILD]",
+      "ART_TEST_FULL": "false",
+      "ART_TEST_INTERPRETER": "true",
+      "ART_TEST_JIT": "true",
+      "ART_TEST_KEEP_GOING": "true",
+      "ART_TEST_OPTIMIZING": "true",
+      "ART_TEST_RUN_TEST_2ND_ARCH": "false",
+      "ART_TEST_RUN_TEST_DEBUG": "false",
+      "ART_TEST_RUN_TEST_NDEBUG": "true",
+      "ART_USE_OPTIMIZING_COMPILER": "true",
+      "HOST_PREFER_32_BIT": "true",
+      "JACK_REPOSITORY": "[SLAVE_BUILD]/prebuilts/sdk/tools/jacks",
+      "JACK_SERVER": "false",
+      "LEGACY_USE_JAVA7": "true",
+      "PATH": "[SLAVE_BUILD]/out/host/linux-x86/bin:%(PATH)s",
+      "SOONG_ALLOW_MISSING_DEPENDENCIES": "true",
+      "TARGET_BUILD_TYPE": "release",
+      "TARGET_BUILD_VARIANT": "eng",
+      "TARGET_PRODUCT": "sdk"
+    },
+    "name": "test jdwp jit"
+  },
+  {
+    "cmd": [
+      "[SLAVE_BUILD]/art/tools/run-jdwp-tests.sh",
+      "--mode=host",
+      "--variant=X32",
+      "--no-jit"
+    ],
+    "env": {
+      "ANDROID_BUILD_TOP": "[SLAVE_BUILD]",
+      "ART_TEST_FULL": "false",
+      "ART_TEST_INTERPRETER": "true",
+      "ART_TEST_JIT": "true",
+      "ART_TEST_KEEP_GOING": "true",
+      "ART_TEST_OPTIMIZING": "true",
+      "ART_TEST_RUN_TEST_2ND_ARCH": "false",
+      "ART_TEST_RUN_TEST_DEBUG": "false",
+      "ART_TEST_RUN_TEST_NDEBUG": "true",
+      "ART_USE_OPTIMIZING_COMPILER": "true",
+      "HOST_PREFER_32_BIT": "true",
+      "JACK_REPOSITORY": "[SLAVE_BUILD]/prebuilts/sdk/tools/jacks",
+      "JACK_SERVER": "false",
+      "LEGACY_USE_JAVA7": "true",
+      "PATH": "[SLAVE_BUILD]/out/host/linux-x86/bin:%(PATH)s",
+      "SOONG_ALLOW_MISSING_DEPENDENCIES": "true",
+      "TARGET_BUILD_TYPE": "release",
+      "TARGET_BUILD_VARIANT": "eng",
+      "TARGET_PRODUCT": "sdk"
+    },
+    "name": "test jdwp aot"
+  },
+  {
+    "name": "$result",
+    "recipe_result": null,
+    "status_code": 0
+  }
+]

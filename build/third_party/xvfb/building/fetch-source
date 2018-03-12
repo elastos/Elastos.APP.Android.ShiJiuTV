@@ -1,0 +1,39 @@
+#!/bin/sh
+# Copyright (c) 2012 The Chromium Authors. All rights reserved.
+# Use of this source code is governed by a BSD-style license that can be
+# found in the LICENSE file.
+
+# This is here to record where we fetched the source packages.
+function getxfromy() {
+  if [ \! -f "$1" ] ; then
+    wget -O "$1" "$2"/"${3-${1}}"
+  fi
+}
+
+getxfromy util-macros-1.11.0.tar.gz \
+          http://xorg.freedesktop.org/releases/individual/util
+
+getxfromy xproto-7.0.20.tar.gz \
+          http://xorg.freedesktop.org/releases/individual/proto
+
+getxfromy dri2proto-2.3.tar.gz \
+          http://xorg.freedesktop.org/releases/individual/proto
+
+getxfromy xcb-proto-1.6.tar.gz \
+          http://xorg.freedesktop.org/releases/individual/xcb
+
+getxfromy libXfont-1.4.3.tar.gz \
+          http://xorg.freedesktop.org/releases/individual/lib
+
+getxfromy libxkbfile-1.0.7.tar.gz \
+          http://xorg.freedesktop.org/releases/individual/lib
+
+getxfromy xorg-server-1.9.3.901.tar.gz \
+          http://xorg.freedesktop.org/releases/individual/xserver
+
+getxfromy libdrm-2.4.26.tar.gz http://dri.freedesktop.org/libdrm
+
+getxfromy libXmu-1.0.5.tar.gz http://ftp.x.org/pub/individual/lib
+
+mesa=${MESA_VER-8.0.1}
+getxfromy MesaLib-${mesa}.tar.gz ftp://ftp.freedesktop.org/pub/mesa/${mesa}

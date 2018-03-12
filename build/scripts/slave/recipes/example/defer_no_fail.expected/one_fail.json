@@ -1,0 +1,25 @@
+[
+  {
+    "cmd": [
+      "echo",
+      "testa"
+    ],
+    "name": "testa",
+    "~followup_annotations": [
+      "step returned non-zero exit code: 1",
+      "@@@STEP_FAILURE@@@"
+    ]
+  },
+  {
+    "cmd": [
+      "echo",
+      "testb"
+    ],
+    "name": "testb"
+  },
+  {
+    "name": "$result",
+    "recipe_result": null,
+    "status_code": 0
+  }
+]
