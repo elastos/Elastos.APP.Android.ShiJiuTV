@@ -1,0 +1,8 @@
+lib/builtins/CMakeFiles/clang_rt.builtins-x86_64.dir/fixsfti.c.o: \
+ /media/mengxk/data/sources/chromium-googlecode-origin/src/third_party/llvm/compiler-rt/lib/builtins/fixsfti.c \
+ /media/mengxk/data/sources/chromium-googlecode-origin/src/third_party/llvm/compiler-rt/lib/builtins/int_lib.h \
+ /media/mengxk/data/sources/chromium-googlecode-origin/src/third_party/llvm/compiler-rt/lib/builtins/int_types.h \
+ /media/mengxk/data/sources/chromium-googlecode-origin/src/third_party/llvm/compiler-rt/lib/builtins/int_endianness.h \
+ /media/mengxk/data/sources/chromium-googlecode-origin/src/third_party/llvm/compiler-rt/lib/builtins/int_util.h \
+ /media/mengxk/data/sources/chromium-googlecode-origin/src/third_party/llvm/compiler-rt/lib/builtins/fp_lib.h \
+ /media/mengxk/data/sources/chromium-googlecode-origin/src/third_party/llvm/compiler-rt/lib/builtins/fp_fixint_impl.inc

@@ -1,0 +1,200 @@
+Performing C++ SOURCE FILE Test COMPILER_RT_HAS_FNO_SANITIZE_SAFE_STACK_FLAG failed with the following output:
+Change Dir: /media/mengxk/data/sources/chromium-googlecode-origin/src/third_party/llvm-build/compiler-rt/CMakeFiles/CMakeTmp
+
+Run Build Command:/media/mengxk/data/sources/chromium-googlecode-origin/depot_tools/ninja cmTryCompileExec552240535
+[1/2] Building CXX object CMakeFiles/cmTryCompileExec552240535.dir/src.cxx.o
+FAILED: /usr/bin/c++    -DCOMPILER_RT_HAS_FNO_SANITIZE_SAFE_STACK_FLAG   -fno-sanitize=safe-stack -o CMakeFiles/cmTryCompileExec552240535.dir/src.cxx.o -c src.cxx
+c++: error: unrecognized command line option '-fno-sanitize=safe-stack'
+ninja: build stopped: subcommand failed.
+
+Source file was:
+int main() { return 0;}
+Performing C++ SOURCE FILE Test COMPILER_RT_HAS_GR_FLAG failed with the following output:
+Change Dir: /media/mengxk/data/sources/chromium-googlecode-origin/src/third_party/llvm-build/compiler-rt/CMakeFiles/CMakeTmp
+
+Run Build Command:/media/mengxk/data/sources/chromium-googlecode-origin/depot_tools/ninja cmTryCompileExec2595784231
+[1/2] Building CXX object CMakeFiles/cmTryCompileExec2595784231.dir/src.cxx.o
+FAILED: /usr/bin/c++    -DCOMPILER_RT_HAS_GR_FLAG   /GR -o CMakeFiles/cmTryCompileExec2595784231.dir/src.cxx.o -c src.cxx
+c++: error: /GR: No such file or directory
+ninja: build stopped: subcommand failed.
+
+Source file was:
+int main() { return 0;}
+Performing C++ SOURCE FILE Test COMPILER_RT_HAS_GS_FLAG failed with the following output:
+Change Dir: /media/mengxk/data/sources/chromium-googlecode-origin/src/third_party/llvm-build/compiler-rt/CMakeFiles/CMakeTmp
+
+Run Build Command:/media/mengxk/data/sources/chromium-googlecode-origin/depot_tools/ninja cmTryCompileExec3409393838
+[1/2] Building CXX object CMakeFiles/cmTryCompileExec3409393838.dir/src.cxx.o
+FAILED: /usr/bin/c++    -DCOMPILER_RT_HAS_GS_FLAG   /GS -o CMakeFiles/cmTryCompileExec3409393838.dir/src.cxx.o -c src.cxx
+c++: error: /GS: No such file or directory
+ninja: build stopped: subcommand failed.
+
+Source file was:
+int main() { return 0;}
+Performing C++ SOURCE FILE Test COMPILER_RT_HAS_MT_FLAG failed with the following output:
+Change Dir: /media/mengxk/data/sources/chromium-googlecode-origin/src/third_party/llvm-build/compiler-rt/CMakeFiles/CMakeTmp
+
+Run Build Command:/media/mengxk/data/sources/chromium-googlecode-origin/depot_tools/ninja cmTryCompileExec1450314350
+[1/2] Building CXX object CMakeFiles/cmTryCompileExec1450314350.dir/src.cxx.o
+FAILED: /usr/bin/c++    -DCOMPILER_RT_HAS_MT_FLAG   /MT -o CMakeFiles/cmTryCompileExec1450314350.dir/src.cxx.o -c src.cxx
+c++: error: /MT: No such file or directory
+ninja: build stopped: subcommand failed.
+
+Source file was:
+int main() { return 0;}
+Performing C++ SOURCE FILE Test COMPILER_RT_HAS_Oy_FLAG failed with the following output:
+Change Dir: /media/mengxk/data/sources/chromium-googlecode-origin/src/third_party/llvm-build/compiler-rt/CMakeFiles/CMakeTmp
+
+Run Build Command:/media/mengxk/data/sources/chromium-googlecode-origin/depot_tools/ninja cmTryCompileExec4251774907
+[1/2] Building CXX object CMakeFiles/cmTryCompileExec4251774907.dir/src.cxx.o
+FAILED: /usr/bin/c++    -DCOMPILER_RT_HAS_Oy_FLAG   /Oy -o CMakeFiles/cmTryCompileExec4251774907.dir/src.cxx.o -c src.cxx
+c++: error: /Oy: No such file or directory
+ninja: build stopped: subcommand failed.
+
+Source file was:
+int main() { return 0;}
+Performing C++ SOURCE FILE Test COMPILER_RT_HAS_GLINE_TABLES_ONLY_FLAG failed with the following output:
+Change Dir: /media/mengxk/data/sources/chromium-googlecode-origin/src/third_party/llvm-build/compiler-rt/CMakeFiles/CMakeTmp
+
+Run Build Command:/media/mengxk/data/sources/chromium-googlecode-origin/depot_tools/ninja cmTryCompileExec3754809576
+[1/2] Building CXX object CMakeFiles/cmTryCompileExec3754809576.dir/src.cxx.o
+FAILED: /usr/bin/c++    -DCOMPILER_RT_HAS_GLINE_TABLES_ONLY_FLAG   -gline-tables-only -o CMakeFiles/cmTryCompileExec3754809576.dir/src.cxx.o -c src.cxx
+cc1plus: error: unrecognised debug output level "line-tables-only"
+ninja: build stopped: subcommand failed.
+
+Source file was:
+int main() { return 0;}
+Performing C++ SOURCE FILE Test COMPILER_RT_HAS_Zi_FLAG failed with the following output:
+Change Dir: /media/mengxk/data/sources/chromium-googlecode-origin/src/third_party/llvm-build/compiler-rt/CMakeFiles/CMakeTmp
+
+Run Build Command:/media/mengxk/data/sources/chromium-googlecode-origin/depot_tools/ninja cmTryCompileExec1311139437
+[1/2] Building CXX object CMakeFiles/cmTryCompileExec1311139437.dir/src.cxx.o
+FAILED: /usr/bin/c++    -DCOMPILER_RT_HAS_Zi_FLAG   /Zi -o CMakeFiles/cmTryCompileExec1311139437.dir/src.cxx.o -c src.cxx
+c++: error: /Zi: No such file or directory
+ninja: build stopped: subcommand failed.
+
+Source file was:
+int main() { return 0;}
+Performing C++ SOURCE FILE Test COMPILER_RT_HAS_WGLOBAL_CONSTRUCTORS_FLAG failed with the following output:
+Change Dir: /media/mengxk/data/sources/chromium-googlecode-origin/src/third_party/llvm-build/compiler-rt/CMakeFiles/CMakeTmp
+
+Run Build Command:/media/mengxk/data/sources/chromium-googlecode-origin/depot_tools/ninja cmTryCompileExec2057521619
+[1/2] Building CXX object CMakeFiles/cmTryCompileExec2057521619.dir/src.cxx.o
+FAILED: /usr/bin/c++    -DCOMPILER_RT_HAS_WGLOBAL_CONSTRUCTORS_FLAG   -Werror -Wglobal-constructors -o CMakeFiles/cmTryCompileExec2057521619.dir/src.cxx.o -c src.cxx
+c++: error: unrecognized command line option '-Wglobal-constructors'
+ninja: build stopped: subcommand failed.
+
+Source file was:
+int main() { return 0;}
+Performing C++ SOURCE FILE Test COMPILER_RT_HAS_WC99_EXTENSIONS_FLAG failed with the following output:
+Change Dir: /media/mengxk/data/sources/chromium-googlecode-origin/src/third_party/llvm-build/compiler-rt/CMakeFiles/CMakeTmp
+
+Run Build Command:/media/mengxk/data/sources/chromium-googlecode-origin/depot_tools/ninja cmTryCompileExec3229069344
+[1/2] Building CXX object CMakeFiles/cmTryCompileExec3229069344.dir/src.cxx.o
+FAILED: /usr/bin/c++    -DCOMPILER_RT_HAS_WC99_EXTENSIONS_FLAG   -Werror -Wc99-extensions -o CMakeFiles/cmTryCompileExec3229069344.dir/src.cxx.o -c src.cxx
+c++: error: unrecognized command line option '-Wc99-extensions'
+ninja: build stopped: subcommand failed.
+
+Source file was:
+int main() { return 0;}
+Performing C++ SOURCE FILE Test COMPILER_RT_HAS_WGNU_FLAG failed with the following output:
+Change Dir: /media/mengxk/data/sources/chromium-googlecode-origin/src/third_party/llvm-build/compiler-rt/CMakeFiles/CMakeTmp
+
+Run Build Command:/media/mengxk/data/sources/chromium-googlecode-origin/depot_tools/ninja cmTryCompileExec1342968549
+[1/2] Building CXX object CMakeFiles/cmTryCompileExec1342968549.dir/src.cxx.o
+FAILED: /usr/bin/c++    -DCOMPILER_RT_HAS_WGNU_FLAG   -Werror -Wgnu -o CMakeFiles/cmTryCompileExec1342968549.dir/src.cxx.o -c src.cxx
+c++: error: unrecognized command line option '-Wgnu'
+ninja: build stopped: subcommand failed.
+
+Source file was:
+int main() { return 0;}
+Performing C++ SOURCE FILE Test COMPILER_RT_HAS_W3_FLAG failed with the following output:
+Change Dir: /media/mengxk/data/sources/chromium-googlecode-origin/src/third_party/llvm-build/compiler-rt/CMakeFiles/CMakeTmp
+
+Run Build Command:/media/mengxk/data/sources/chromium-googlecode-origin/depot_tools/ninja cmTryCompileExec3175893250
+[1/2] Building CXX object CMakeFiles/cmTryCompileExec3175893250.dir/src.cxx.o
+FAILED: /usr/bin/c++    -DCOMPILER_RT_HAS_W3_FLAG   /W3 -o CMakeFiles/cmTryCompileExec3175893250.dir/src.cxx.o -c src.cxx
+c++: error: /W3: No such file or directory
+ninja: build stopped: subcommand failed.
+
+Source file was:
+int main() { return 0;}
+Performing C++ SOURCE FILE Test COMPILER_RT_HAS_WX_FLAG failed with the following output:
+Change Dir: /media/mengxk/data/sources/chromium-googlecode-origin/src/third_party/llvm-build/compiler-rt/CMakeFiles/CMakeTmp
+
+Run Build Command:/media/mengxk/data/sources/chromium-googlecode-origin/depot_tools/ninja cmTryCompileExec2794765312
+[1/2] Building CXX object CMakeFiles/cmTryCompileExec2794765312.dir/src.cxx.o
+FAILED: /usr/bin/c++    -DCOMPILER_RT_HAS_WX_FLAG   /WX -o CMakeFiles/cmTryCompileExec2794765312.dir/src.cxx.o -c src.cxx
+c++: error: /WX: No such file or directory
+ninja: build stopped: subcommand failed.
+
+Source file was:
+int main() { return 0;}
+Performing C++ SOURCE FILE Test COMPILER_RT_HAS_WD4146_FLAG failed with the following output:
+Change Dir: /media/mengxk/data/sources/chromium-googlecode-origin/src/third_party/llvm-build/compiler-rt/CMakeFiles/CMakeTmp
+
+Run Build Command:/media/mengxk/data/sources/chromium-googlecode-origin/depot_tools/ninja cmTryCompileExec3792452152
+[1/2] Building CXX object CMakeFiles/cmTryCompileExec3792452152.dir/src.cxx.o
+FAILED: /usr/bin/c++    -DCOMPILER_RT_HAS_WD4146_FLAG   /wd4146 -o CMakeFiles/cmTryCompileExec3792452152.dir/src.cxx.o -c src.cxx
+c++: error: /wd4146: No such file or directory
+ninja: build stopped: subcommand failed.
+
+Source file was:
+int main() { return 0;}
+Performing C++ SOURCE FILE Test COMPILER_RT_HAS_WD4291_FLAG failed with the following output:
+Change Dir: /media/mengxk/data/sources/chromium-googlecode-origin/src/third_party/llvm-build/compiler-rt/CMakeFiles/CMakeTmp
+
+Run Build Command:/media/mengxk/data/sources/chromium-googlecode-origin/depot_tools/ninja cmTryCompileExec2349020675
+[1/2] Building CXX object CMakeFiles/cmTryCompileExec2349020675.dir/src.cxx.o
+FAILED: /usr/bin/c++    -DCOMPILER_RT_HAS_WD4291_FLAG   /wd4291 -o CMakeFiles/cmTryCompileExec2349020675.dir/src.cxx.o -c src.cxx
+c++: error: /wd4291: No such file or directory
+ninja: build stopped: subcommand failed.
+
+Source file was:
+int main() { return 0;}
+Performing C++ SOURCE FILE Test COMPILER_RT_HAS_WD4391_FLAG failed with the following output:
+Change Dir: /media/mengxk/data/sources/chromium-googlecode-origin/src/third_party/llvm-build/compiler-rt/CMakeFiles/CMakeTmp
+
+Run Build Command:/media/mengxk/data/sources/chromium-googlecode-origin/depot_tools/ninja cmTryCompileExec728239706
+[1/2] Building CXX object CMakeFiles/cmTryCompileExec728239706.dir/src.cxx.o
+FAILED: /usr/bin/c++    -DCOMPILER_RT_HAS_WD4391_FLAG   /wd4391 -o CMakeFiles/cmTryCompileExec728239706.dir/src.cxx.o -c src.cxx
+c++: error: /wd4391: No such file or directory
+ninja: build stopped: subcommand failed.
+
+Source file was:
+int main() { return 0;}
+Performing C++ SOURCE FILE Test COMPILER_RT_HAS_WD4722_FLAG failed with the following output:
+Change Dir: /media/mengxk/data/sources/chromium-googlecode-origin/src/third_party/llvm-build/compiler-rt/CMakeFiles/CMakeTmp
+
+Run Build Command:/media/mengxk/data/sources/chromium-googlecode-origin/depot_tools/ninja cmTryCompileExec1671906369
+[1/2] Building CXX object CMakeFiles/cmTryCompileExec1671906369.dir/src.cxx.o
+FAILED: /usr/bin/c++    -DCOMPILER_RT_HAS_WD4722_FLAG   /wd4722 -o CMakeFiles/cmTryCompileExec1671906369.dir/src.cxx.o -c src.cxx
+c++: error: /wd4722: No such file or directory
+ninja: build stopped: subcommand failed.
+
+Source file was:
+int main() { return 0;}
+Performing C++ SOURCE FILE Test COMPILER_RT_HAS_WD4800_FLAG failed with the following output:
+Change Dir: /media/mengxk/data/sources/chromium-googlecode-origin/src/third_party/llvm-build/compiler-rt/CMakeFiles/CMakeTmp
+
+Run Build Command:/media/mengxk/data/sources/chromium-googlecode-origin/depot_tools/ninja cmTryCompileExec2349739360
+[1/2] Building CXX object CMakeFiles/cmTryCompileExec2349739360.dir/src.cxx.o
+FAILED: /usr/bin/c++    -DCOMPILER_RT_HAS_WD4800_FLAG   /wd4800 -o CMakeFiles/cmTryCompileExec2349739360.dir/src.cxx.o -c src.cxx
+c++: error: /wd4800: No such file or directory
+ninja: build stopped: subcommand failed.
+
+Source file was:
+int main() { return 0;}
+Determining if the include file tirpc/rpc/xdr.h exists failed with the following output:
+Change Dir: /media/mengxk/data/sources/chromium-googlecode-origin/src/third_party/llvm-build/compiler-rt/CMakeFiles/CMakeTmp
+
+Run Build Command:/media/mengxk/data/sources/chromium-googlecode-origin/depot_tools/ninja cmTryCompileExec1179357043
+[1/2] Building C object CMakeFiles/cmTryCompileExec1179357043.dir/CheckIncludeFile.c.o
+FAILED: /usr/bin/cc   -Wall -o CMakeFiles/cmTryCompileExec1179357043.dir/CheckIncludeFile.c.o   -c CheckIncludeFile.c
+CheckIncludeFile.c:1:27: fatal error: tirpc/rpc/xdr.h: No such file or directory
+ #include <tirpc/rpc/xdr.h>
+                           ^
+compilation terminated.
+ninja: build stopped: subcommand failed.
+
+

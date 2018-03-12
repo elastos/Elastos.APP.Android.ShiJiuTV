@@ -1,0 +1,3 @@
+; RUN: true
+
+; REQUIRES: shell, not_ubsan
