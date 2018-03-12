@@ -1,0 +1,15 @@
+7bfb52897cd851783c9bedfa5d221b39  usr/include/X11/Xauth.h
+a19797fe030f6331f7a0cf54d8b5c4d4  usr/lib/i386-linux-gnu/libXau.a
+f7cd931a30db139bb4bf479aebd1e1b4  usr/lib/i386-linux-gnu/pkgconfig/xau.pc
+e8ae39a282113646fe95e1c8e1305375  usr/share/doc/libxau-dev/changelog.Debian.gz
+5b534e5e3f0bdd2cd6a5ad0949b8cb9d  usr/share/doc/libxau-dev/changelog.gz
+7f080deff007f37d39ede47427bb517d  usr/share/doc/libxau-dev/copyright
+e44f8a10c5398201e931ceda6d10b205  usr/share/man/man3/Xau.3.gz
+9cbe58e584cdd641b7eb0cdad5cb6afa  usr/share/man/man3/XauDisposeAuth.3.gz
+9cbe58e584cdd641b7eb0cdad5cb6afa  usr/share/man/man3/XauFileName.3.gz
+9cbe58e584cdd641b7eb0cdad5cb6afa  usr/share/man/man3/XauGetAuthByAddr.3.gz
+9cbe58e584cdd641b7eb0cdad5cb6afa  usr/share/man/man3/XauGetBestAuthByAddr.3.gz
+9cbe58e584cdd641b7eb0cdad5cb6afa  usr/share/man/man3/XauLockAuth.3.gz
+9cbe58e584cdd641b7eb0cdad5cb6afa  usr/share/man/man3/XauReadAuth.3.gz
+9cbe58e584cdd641b7eb0cdad5cb6afa  usr/share/man/man3/XauUnlockAuth.3.gz
+9cbe58e584cdd641b7eb0cdad5cb6afa  usr/share/man/man3/XauWriteAuth.3.gz

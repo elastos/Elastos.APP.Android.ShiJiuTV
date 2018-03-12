@@ -1,0 +1,17 @@
+Package: libdconf1
+Source: d-conf (0.26.0-2)
+Version: 0.26.0-2+b1
+Architecture: amd64
+Maintainer: Debian GNOME Maintainers <pkg-gnome-maintainers@lists.alioth.debian.org>
+Installed-Size: 91
+Depends: libc6 (>= 2.14), libglib2.0-0 (>= 2.44.0)
+Breaks: gdm3 (<< 3.4.1-9)
+Section: libs
+Priority: optional
+Multi-Arch: same
+Homepage: https://wiki.gnome.org/Projects/dconf
+Description: simple configuration storage system - runtime library
+ DConf is a low-level key/value database designed for storing desktop
+ environment settings.
+ .
+ This package contains the runtime library.

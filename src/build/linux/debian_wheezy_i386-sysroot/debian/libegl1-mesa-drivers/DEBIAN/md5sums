@@ -1,0 +1,6 @@
+25b3f60af53e95526384f9ced6c39e45  usr/lib/i386-linux-gnu/egl/egl_gallium.so
+e5fba87f98609ae3e2899e9727bf72e5  usr/lib/i386-linux-gnu/libwayland-egl.so.1.0
+7f0d95ab544ef194372363bb93229ede  usr/share/bug/libegl1-mesa-drivers/control
+114f277e413ffae0a725cc024a955b47  usr/share/bug/libegl1-mesa-drivers/script
+d3c10858c559bf94d711669ead35283e  usr/share/doc/libegl1-mesa-drivers/changelog.Debian.gz
+241ed682eeb4973b7b7ac9131624f31f  usr/share/doc/libegl1-mesa-drivers/copyright

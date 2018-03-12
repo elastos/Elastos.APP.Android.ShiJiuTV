@@ -1,0 +1,13 @@
+7481b1d8c4933629d93f2ea6bb3c02b6  usr/bin/dumpsexp
+88f31f9312835eeb53c3f6c0b14dc3bd  usr/bin/hmac256
+6d07d5afd0a4a1c1da81bd29f3faa4b4  usr/bin/libgcrypt-config
+fd8eceb5957059a63bd71136d8ae8fba  usr/bin/mpicalc
+c946a4fe8bea6d25f8860d7e27e33d11  usr/include/gcrypt.h
+8e71153d7adab3696263279e770cf61a  usr/lib/x86_64-linux-gnu/libgcrypt.a
+ea6348e5b1f8e7db68adb91622d40840  usr/share/aclocal/libgcrypt.m4
+bf251a430a766bb9aa2ca6fd09d4fddd  usr/share/doc/libgcrypt20-dev/changelog.Debian.gz
+b8209f09ac9dac68db0a8adfd9727507  usr/share/doc/libgcrypt20-dev/changelog.gz
+2a2a67d230cdf56fec06217951756e2b  usr/share/doc/libgcrypt20-dev/copyright
+3beeb1a90c8437a2fc6ad520e153a7e7  usr/share/man/man1/dumpsexp.1.gz
+373066e1921db9a6bae3a4d2517a414e  usr/share/man/man1/hmac256.1.gz
+6eb196802534e1bda43e58ec335ad321  usr/share/man/man1/libgcrypt-config.1.gz

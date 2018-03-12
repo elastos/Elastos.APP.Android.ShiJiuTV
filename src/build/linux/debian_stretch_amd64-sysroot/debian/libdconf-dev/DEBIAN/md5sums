@@ -1,0 +1,12 @@
+943d6bdf25030ebd2210920b9d10591f  usr/include/dconf/client/dconf-client.h
+28f8da2b4c9c00c515aa551bd83b214b  usr/include/dconf/common/dconf-changeset.h
+30cc7bf9b5e5428ce93e5db23a691a95  usr/include/dconf/common/dconf-enums.h
+9776a31ccc60d1b3baa8239ee1c9c96a  usr/include/dconf/common/dconf-paths.h
+d55b383789b2a9ad21ffbac535732246  usr/include/dconf/dconf.h
+d6554666edd446391c7034298a294027  usr/lib/x86_64-linux-gnu/pkgconfig/dconf.pc
+715d979c7e78425cbdbe53291e3d4406  usr/share/doc/libdconf-dev/NEWS.Debian.gz
+abcd405e6eaa532dde7d5bc4ac5fb171  usr/share/doc/libdconf-dev/changelog.Debian.amd64.gz
+83653e5e961c011f1662c57f18e9751f  usr/share/doc/libdconf-dev/changelog.Debian.gz
+13b63f5a07beec6391a9c2295db3c670  usr/share/doc/libdconf-dev/copyright
+fbef06660ab100a61caee377938f0f65  usr/share/vala/vapi/dconf.deps
+d9af9df9e936f3a87be0f4bc7380f13c  usr/share/vala/vapi/dconf.vapi

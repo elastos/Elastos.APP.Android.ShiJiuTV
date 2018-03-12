@@ -1,0 +1,3 @@
+libva-tpi.so.1 libva-tpi1 #MINVER#
+ vaCreateSurfacesWithAttribute@Base 1.2.0
+ vaPutSurfaceBuf@Base 1.2.0

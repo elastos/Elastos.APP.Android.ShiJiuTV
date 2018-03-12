@@ -1,0 +1,15 @@
+Package: libp11-2
+Source: libp11
+Version: 0.4.3-1
+Architecture: amd64
+Maintainer: Debian OpenSC Maintainers <pkg-opensc-maint@lists.alioth.debian.org>
+Installed-Size: 73
+Depends: libc6 (>= 2.14), libssl1.0.2 (>= 1.0.2d)
+Section: libs
+Priority: optional
+Multi-Arch: same
+Homepage: https://github.com/OpenSC/libp11
+Description: pkcs#11 convenience library
+ Libp11 is a library to simplify using smart cards via PKCS#11
+ modules.  It was spun of the OpenSC project but can be used with any
+ pkcs#11 module.

@@ -1,0 +1,3 @@
+libva-egl.so.1 libva-egl1 #MINVER#
+* Build-Depends-Package: libva-dev
+ vaGetEGLClientBufferFromSurface@Base 1.0.12
