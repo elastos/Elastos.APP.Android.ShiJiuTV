@@ -196,6 +196,11 @@ RenderProcessImpl::RenderProcessImpl(
         command_line.GetSwitchValueASCII(switches::kJavaScriptFlags));
     v8::V8::SetFlagsFromString(flags.c_str(), static_cast<int>(flags.size()));
   }
+  // QCast Modify >>>
+  const char enable_extensions_flags[] = "--expose-gc --expose-elastos";
+  const size_t enable_extensions_flags_len = strlen(enable_extensions_flags);
+  v8::V8::SetFlagsFromString(enable_extensions_flags, static_cast<int>(enable_extensions_flags_len));
+  // QCast Modify <<<
 
   SiteIsolationStatsGatherer::SetEnabled(
       GetContentClient()->renderer()->ShouldGatherSiteIsolationStats());

@@ -17,6 +17,7 @@
 #include "src/extensions/ignition-statistics-extension.h"
 #include "src/extensions/statistics-extension.h"
 #include "src/extensions/trigger-failure-extension.h"
+#include "src/extensions/elastos-extension.h" // QCast Modify
 #include "src/heap/heap.h"
 #include "src/isolate-inl.h"
 #include "src/objects/js-regexp.h"
@@ -98,6 +99,7 @@ v8::Extension* Bootstrapper::externalize_string_extension_ = nullptr;
 v8::Extension* Bootstrapper::statistics_extension_ = nullptr;
 v8::Extension* Bootstrapper::trigger_failure_extension_ = nullptr;
 v8::Extension* Bootstrapper::ignition_statistics_extension_ = nullptr;
+v8::Extension* Bootstrapper::elastos_extension_ = nullptr; // QCast Modify
 
 void Bootstrapper::InitializeOncePerProcess() {
   free_buffer_extension_ = new FreeBufferExtension;
@@ -112,6 +114,8 @@ void Bootstrapper::InitializeOncePerProcess() {
   v8::RegisterExtension(trigger_failure_extension_);
   ignition_statistics_extension_ = new IgnitionStatisticsExtension;
   v8::RegisterExtension(ignition_statistics_extension_);
+  elastos_extension_ = new ElastosExtension; // QCast Modify
+  v8::RegisterExtension(elastos_extension_); // QCast Modify
 }
 
 
@@ -128,6 +132,8 @@ void Bootstrapper::TearDownExtensions() {
   trigger_failure_extension_ = nullptr;
   delete ignition_statistics_extension_;
   ignition_statistics_extension_ = nullptr;
+  delete elastos_extension_; // QCast Modify
+  elastos_extension_ = nullptr; // QCast Modify
 }
 
 void Bootstrapper::TearDown() {
@@ -5143,6 +5149,7 @@ bool Genesis::InstallExtensions(Handle<Context> native_context,
          (!FLAG_trace_ignition_dispatches ||
           InstallExtension(isolate, "v8/ignition-statistics",
                            &extension_states)) &&
+         (!FLAG_expose_elastos || InstallExtension(isolate, "v8/elastos", &extension_states)) && // QCast Modify
          InstallRequestedExtensions(isolate, extensions, &extension_states);
 }
 

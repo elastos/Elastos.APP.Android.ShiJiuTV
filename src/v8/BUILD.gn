@@ -1597,6 +1597,8 @@ v8_source_set("v8_base") {
     "src/elements.h",
     "src/execution.cc",
     "src/execution.h",
+    "src/extensions/elastos-extension.cc", # QCast Modify
+    "src/extensions/elastos-extension.h", # QCast Modify
     "src/extensions/externalize-string-extension.cc",
     "src/extensions/externalize-string-extension.h",
     "src/extensions/free-buffer-extension.cc",

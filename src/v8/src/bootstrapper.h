@@ -116,6 +116,7 @@ class Bootstrapper final {
   static v8::Extension* statistics_extension_;
   static v8::Extension* trigger_failure_extension_;
   static v8::Extension* ignition_statistics_extension_;
+  static v8::Extension* elastos_extension_; // QCast Modify
 
   DISALLOW_COPY_AND_ASSIGN(Bootstrapper);
 };
