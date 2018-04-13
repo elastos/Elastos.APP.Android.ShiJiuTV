@@ -1,0 +1,35 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+</head>
+
+<body>
+<script type="text/javascript">
+	var text = "";
+	var mdlInfo = {};
+	var ecode=window.elastosAcquireModuleInfo("/data/local/tmp/libElastos.HelloCarDemo.so", mdlInfo);
+	text += "elastosAcquireModuleInfo() ecode=" + ecode + " mdlInfo=" + JSON.stringify(mdlInfo) + "<br/>";
+	if(ecode == 0) {
+		var clsInfo = {};
+		ecode=mdlInfo.GetClassInfo("CHelloCar", clsInfo);
+		text += "GetClassInfo() ecode=" + ecode + " clsInfo=" + JSON.stringify(clsInfo) + "<br/>";
+		if(ecode == 0) {
+			var iface = {};
+			ecode=clsInfo.CreateObject(iface);
+			text += "CreateObject() ecode=" + ecode + " iface=" + JSON.stringify(iface) + "<br/>";
+			if(ecode == 0) {
+				var retval = {};
+				ecode=iface.Hello(retval);
+				text += "Hello() ecode=" + ecode + " retval=" + JSON.stringify(retval) + "<br/>";
+
+				text +=  "<br/>" + "最终结果: " + retval.value + "<br/>";
+			}
+		}
+	}
+
+	document.write(text);
+</script>
+
+</body>
+</html>
