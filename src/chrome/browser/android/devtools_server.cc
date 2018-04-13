@@ -43,6 +43,16 @@
 #include "net/socket/unix_domain_server_socket_posix.h"
 #include "net/url_request/url_request_context_getter.h"
 
+// QCast Modify >>>, HTTP DevTools
+#include <android/log.h>
+#include "base/command_line.h"
+#include "base/strings/string_number_conversions.h"
+#include "content/public/common/content_switches.h"
+#include "net/socket/tcp_server_socket.h"
+
+std::unique_ptr<content::DevToolsSocketFactory> CreateSocketFactory();
+// QCast Modify <<<, HTTP DevTools
+
 using base::android::JavaParamRef;
 using content::DevToolsAgentHost;
 using content::RenderViewHost;
@@ -62,7 +72,7 @@ namespace {
 const char kDevToolsChannelNameFormat[] = "%s_devtools_remote";
 
 const char kFrontEndURL[] =
-    "http://chrome-devtools-frontend.appspot.com/serve_rev/%s/inspector.html";
+    "chrome-devtools://devtools/bundled/inspector.html"; // QCast Modify, HTTP DevTools
 const char kTetheringSocketName[] = "chrome_devtools_tethering_%d_%d";
 
 const int kBackLog = 10;
@@ -152,10 +162,10 @@ void DevToolsServer::Start(bool allow_debug_permission) {
           base::Bind(&AuthorizeSocketAccessWithDebugPermission) :
           base::Bind(&content::CanUserConnectToDevTools);
   std::unique_ptr<content::DevToolsSocketFactory> factory(
-      new UnixDomainServerSocketFactory(socket_name_, auth_callback));
+      CreateSocketFactory()); // QCast Modify, HTTP DevTools
   DevToolsAgentHost::StartRemoteDebuggingServer(
       std::move(factory),
-      base::StringPrintf(kFrontEndURL, content::GetWebKitRevision().c_str()),
+      kFrontEndURL, // QCast Modify, HTTP DevTools
       base::FilePath(), base::FilePath());
   is_started_ = true;
 }
@@ -205,3 +215,56 @@ static void JNI_DevToolsServer_SetRemoteDebuggingEnabled(
     devtools_server->Stop();
   }
 }
+
+// QCast Modify >>>, HTTP DevTools
+// Porting from content/shell/browser/shell_devtools_manager_delegate.cc
+class TCPServerSocketFactory : public content::DevToolsSocketFactory {
+ public:
+  TCPServerSocketFactory(const std::string& address, uint16_t port)
+      : address_(address), port_(port) {}
+
+ private:
+  // content::DevToolsSocketFactory.
+  std::unique_ptr<net::ServerSocket> CreateForHttpServer() override {
+    const int kBackLog = 10;
+    std::unique_ptr<net::ServerSocket> socket(
+        new net::TCPServerSocket(nullptr, net::NetLogSource()));
+    if (socket->ListenWithAddressAndPort(address_, port_, kBackLog) != net::OK)
+      return std::unique_ptr<net::ServerSocket>();
+
+    return socket;
+  }
+
+  std::unique_ptr<net::ServerSocket> CreateForTethering(
+      std::string* out_name) override {
+    return nullptr;
+  }
+
+  std::string address_;
+  uint16_t port_;
+
+  DISALLOW_COPY_AND_ASSIGN(TCPServerSocketFactory);
+};
+
+std::unique_ptr<content::DevToolsSocketFactory> CreateSocketFactory() {
+  const base::CommandLine& command_line =
+      *base::CommandLine::ForCurrentProcess();
+  uint16_t port = 9333;
+  if (command_line.HasSwitch(switches::kRemoteDebuggingPort)) {
+    int temp_port;
+    std::string port_str =
+        command_line.GetSwitchValueASCII(switches::kRemoteDebuggingPort);
+    if (base::StringToInt(port_str, &temp_port) &&
+        temp_port >= 0 && temp_port < 65535) {
+      port = static_cast<uint16_t>(temp_port);
+    } else {
+      DLOG(WARNING) << "Invalid http debugger port number " << temp_port;
+    }
+  }
+  __android_log_print(ANDROID_LOG_INFO, "DevTools", "Chromium remote debugging enabled, port is %u", port);
+  __android_log_print(ANDROID_LOG_INFO, "DevTools", "Chromium remote debugging url: %s", kFrontEndURL);
+
+  return std::unique_ptr<content::DevToolsSocketFactory>(
+          new TCPServerSocketFactory("0.0.0.0", port));
+}
+// QCast Modify <<<, HTTP DevTools

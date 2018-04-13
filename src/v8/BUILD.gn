@@ -2493,7 +2493,32 @@ v8_source_set("v8_base") {
     sources += [ "$target_gen_dir/debug-support.cc" ]
     deps += [ ":postmortem-metadata" ]
   }
+
+  # QCast Modify >>>
+  if (is_android) {
+    include_dirs = [ "src/third_party/elastos/${v8_current_cpu}/inc/" ]
+  }
+  # QCast Modify <<<
 }
+
+# QCast Modify >>>
+copy("copy_elastos_libs") {
+  sources = [
+    "src/third_party/elastos/${v8_current_cpu}/libs/libElastos.Runtime_static.a",
+    "src/third_party/elastos/${v8_current_cpu}/libs/libelacarrier.so",
+    "src/third_party/elastos/${v8_current_cpu}/libs/libelasession.so",
+    "src/third_party/elastos/${v8_current_cpu}/libs/libElastos.Runtime.so",
+    "src/third_party/elastos/${v8_current_cpu}/libs/libstlport.so",
+    "src/third_party/elastos/${v8_current_cpu}/libs/libcrypto.so",
+    "src/third_party/elastos/${v8_current_cpu}/libs/libelacommon.so",
+    "src/third_party/elastos/${v8_current_cpu}/libs/libElastos.CoreLibrary.so",
+    "src/third_party/elastos/${v8_current_cpu}/libs/libicuuc.so",
+  ]
+  outputs = [
+    "${root_shlib_dir}/{{source_file_part}}",
+  ]
+}
+# QCast Modify <<<
 
 v8_component("v8_libbase") {
   sources = [
@@ -2874,6 +2899,23 @@ if (is_component_build) {
     configs = [ ":internal_config" ]
 
     public_configs = [ ":external_config" ]
+
+    # QCast Modify >>>
+    if (is_android) {
+      ldflags = [
+        "-L../../v8/src/third_party/elastos/${v8_current_cpu}/libs",
+        "-lElastos.Runtime_static",
+        "-lelacarrier",
+        "-lelasession",
+        "-lElastos.Runtime",
+        "-lstlport",
+        "-lcrypto",
+        "-lelacommon",
+        "-lElastos.CoreLibrary",
+        "-licuuc",
+      ]
+    }
+    # QCast Modify <<<
   }
 
   v8_component("v8_for_testing") {
