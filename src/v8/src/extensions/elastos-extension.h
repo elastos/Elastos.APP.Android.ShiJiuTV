@@ -2,6 +2,7 @@
 #define V8_EXTENSIONS_ELASTOS_EXTENSION_H_
 
 #include "include/v8.h"
+#include <map>
 
 namespace v8 {
 namespace internal {
@@ -13,6 +14,20 @@ class ElastosExtension : public v8::Extension {
       v8::Isolate* v8Isolate, v8::Local<v8::String> v8Name);
 
  private:
+  struct WeakInfo {
+    explicit WeakInfo(v8::Isolate* v8Isolate, v8::Local<v8::Object> obj, int type, void* addr);
+    virtual ~WeakInfo();
+    void Clear();
+
+    v8::Global<v8::Object> gobj;
+    int type;
+    void* addr;
+
+    static constexpr int kTypeModule = 1;
+    static constexpr int kTypeClass = 2;
+    static constexpr int kTypeInterface = 3;
+  };
+
   struct ArgInfoCache {
     ArgInfoCache()
       : type(-1)
@@ -29,7 +44,7 @@ class ElastosExtension : public v8::Extension {
 
 #if defined(__ANDROID__)
   static void AcquireModuleInfo(const v8::FunctionCallbackInfo<v8::Value>& v8Args);
-  static void CreateObject(const v8::FunctionCallbackInfo<v8::Value>& v8Args);
+  static void Release(const v8::FunctionCallbackInfo<v8::Value>& v8Args);
 
   static void ModuleInfoCallback(const v8::FunctionCallbackInfo<v8::Value>& v8Args);
   static void ModuleInfoGetClassInfo(v8::Isolate* v8Isolate, const v8::FunctionCallbackInfo<v8::Value>& v8Args);
@@ -45,17 +60,21 @@ class ElastosExtension : public v8::Extension {
                            struct ArgInfoCache& cache);
   static int RestoreArgument(const struct ArgInfoCache& cache, int idx, const v8::FunctionCallbackInfo<v8::Value>& v8Args);
 
-  static void WeakCallback(const WeakCallbackInfo<v8::Global<v8::Object>>& v8Data);
+  static WeakInfo* NewWeak(v8::Isolate* v8Isolate, v8::Local<v8::Object> obj, int type, void* addr);
+  static void DeleteWeak(WeakInfo* weakInfo);
+  static void WeakCallback(const WeakCallbackInfo<WeakInfo>& v8Data);
   static v8::Local<v8::String> MakeString(v8::Isolate* v8Isolate, const char* str);
 
-  static v8::Global<v8::Object>* NewV8GlobalObject(v8::Isolate* v8Isolate, bool setWeak);
-#endif // defined(__ANDROID__)
-
-  static const char* const kSource;
 
   static constexpr int kFuncNameIdx = 0;
   static constexpr int kFuncPrivIdx = 1;
   static constexpr int kFuncOwnerIdx = 2;
+
+#endif // defined(__ANDROID__)
+
+  static const char* const kSource;
+  static const char* const kNativeClassName;
+  static const char* const kNativeAddress;
 };
 
 }  // namespace internal

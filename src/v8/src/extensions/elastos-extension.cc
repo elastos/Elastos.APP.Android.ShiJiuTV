@@ -12,22 +12,27 @@ namespace v8 {
 namespace internal {
 
 const char* const ElastosExtension::kSource =
-    "native function elastosAcquireModuleInfo();";
+    "native function elastosAcquireModuleInfo();"
+    "native function elastosRelease();";
+const char* const ElastosExtension::kNativeClassName = "nativeClassName";
+const char* const ElastosExtension::kNativeAddress = "nativeAddress";
 
 v8::Local<v8::FunctionTemplate> ElastosExtension::GetNativeFunctionTemplate(
     v8::Isolate* v8Isolate, v8::Local<v8::String> v8Str)
 {
-  v8::String::Utf8Value v8StrUtf8(v8Isolate, v8Str);
+  std::string funcName(*v8::String::Utf8Value(v8Str));
 
 #if defined(__ANDROID__)
-  if (strcmp(*v8StrUtf8, "elastosAcquireModuleInfo") == 0) {
+  if (funcName == "elastosAcquireModuleInfo") {
     return v8::FunctionTemplate::New(v8Isolate, ElastosExtension::AcquireModuleInfo);
+  } else if (funcName == "elastosRelease") {
+    return v8::FunctionTemplate::New(v8Isolate, ElastosExtension::Release);
   }
 #endif // defined(__ANDROID__)
 
   std::ostringstream errmsg;
   errmsg << "Error: Failed to get native function template: ";
-  errmsg << *v8StrUtf8;
+  errmsg << funcName;
   ThrowException(v8Isolate, errmsg.str().c_str());
   return v8::Local<v8::FunctionTemplate>();
 }
@@ -72,8 +77,10 @@ void ElastosExtension::AcquireModuleInfo(const v8::FunctionCallbackInfo<v8::Valu
     v8Args.GetReturnValue().Set(v8::Integer::New(v8Isolate, ret));
     return;
   }
+  WeakInfo* pWeakInfo = NewWeak(v8Isolate, v8MdlInfo, WeakInfo::kTypeModule, pMdlInfo);
 
-  v8MdlInfo->Set(MakeString(v8Isolate, "name"), MakeString(v8Isolate, "IModuleInfo"));
+  v8MdlInfo->Set(MakeString(v8Isolate, kNativeClassName), MakeString(v8Isolate, "IModuleInfo"));
+  v8MdlInfo->Set(MakeString(v8Isolate, kNativeAddress), v8::External::New(v8Isolate, pWeakInfo));
 
   auto v8MdlInfoData = v8::Object::New(v8Isolate);
   v8MdlInfoData->Set(kFuncNameIdx, MakeString(v8Isolate, "GetClassInfo"));
@@ -83,6 +90,33 @@ void ElastosExtension::AcquireModuleInfo(const v8::FunctionCallbackInfo<v8::Valu
 
   base::OS::Print("Success to load library: %s. IModuleInfo=%p\n", *v8LibName, pMdlInfo);
   v8Args.GetReturnValue().Set(v8::Integer::New(v8Isolate, ret));
+}
+
+void ElastosExtension::Release(const v8::FunctionCallbackInfo<v8::Value>& v8Args)
+{
+  v8::Isolate* v8Isolate = v8Args.GetIsolate();
+  v8::HandleScope v8HandleScope(v8Isolate);
+
+  if (v8Args.Length() != 1) {
+    const char* errmsg = "TypeError: Failed to execute 'elastosRelease': 1 argument required.";
+    ThrowException(v8Isolate, errmsg);
+    return;
+  }
+  if (v8Args[0]->IsObject() == false) {
+    const char* errmsg = "TypeError: Failed to execute 'elastosRelease': object argument required.";
+    ThrowException(v8Isolate, errmsg);
+    return;
+  }
+
+  v8::Local<v8::Object> v8Object = v8::Local<v8::Object>::Cast(v8Args[0]);
+  auto v8WeakInfo = v8Object->Get(MakeString(v8Isolate, kNativeAddress));
+  WeakInfo* pWeakInfo = static_cast<WeakInfo*>(v8::Local<v8::External>::Cast(v8WeakInfo)->Value());
+
+  DeleteWeak(pWeakInfo);
+
+  v8Object->Set(MakeString(v8Isolate, kNativeAddress), v8::External::New(v8Isolate, nullptr));
+
+  base::OS::Print("Success to release \n");
 }
 
 void ElastosExtension::ModuleInfoCallback(const v8::FunctionCallbackInfo<v8::Value>& v8Args)
@@ -132,14 +166,18 @@ void ElastosExtension::ModuleInfoGetClassInfo(v8::Isolate* v8Isolate, const v8::
     v8Args.GetReturnValue().Set(v8::Integer::New(v8Isolate, ret));
     return;
   }
+  WeakInfo* pWeakInfo = NewWeak(v8Isolate, v8ClassInfo, WeakInfo::kTypeClass, pClsInfo);
 
-  v8ClassInfo->Set(MakeString(v8Isolate, "name"), MakeString(v8Isolate, "IClassInfo"));
+  v8ClassInfo->Set(MakeString(v8Isolate, kNativeClassName), MakeString(v8Isolate, "IClassInfo"));
+  v8ClassInfo->Set(MakeString(v8Isolate, kNativeAddress), v8::External::New(v8Isolate, pWeakInfo));
 
   auto v8ClsInfoData = v8::Object::New(v8Isolate);
   v8ClsInfoData->Set(kFuncNameIdx, MakeString(v8Isolate, "CreateObject"));
   v8ClsInfoData->Set(kFuncPrivIdx, v8::External::New(v8Isolate, pClsInfo));
   auto v8ClsInfoCallbackTemplate = v8::FunctionTemplate::New(v8Isolate, ElastosExtension::ClassInfoCallback, v8ClsInfoData);
   v8ClassInfo->Set(MakeString(v8Isolate, "CreateObject"), v8ClsInfoCallbackTemplate->GetFunction());
+
+  //SetWeak(v8Isolate, v8ClassInfo);
 
   base::OS::Print("Success to exec Elastos::IModuleInfo::GetClassInfo(): %s.\n", *v8ClassName);
   v8Args.GetReturnValue().Set(v8::Integer::New(v8Isolate, ret));
@@ -179,7 +217,7 @@ void ElastosExtension::ClassInfoCreateObject(v8::Isolate* v8Isolate, const v8::F
   v8::Local<v8::Object> v8Interface = v8::Local<v8::Object>::Cast(v8Args[0]);
 
   IClassInfo* pClsInfo = static_cast<IClassInfo*>(v8ClsInfoPriv->Value());
-  PInterface pInterface = nullptr;
+  IInterface* pInterface = nullptr;
   CARAPI ret = pClsInfo->CreateObject(&pInterface);
   if (ret != NOERROR) {
     base::OS::PrintError("Error: Failed to exec Elastos::IClassInfo::CreateObject(). ECode=0x%08x\n", ret);
@@ -201,8 +239,11 @@ void ElastosExtension::ClassInfoCreateObject(v8::Isolate* v8Isolate, const v8::F
     v8Args.GetReturnValue().Set(v8::Integer::New(v8Isolate, ret));
     return;
   }
+  WeakInfo* pWeakInfo = NewWeak(v8Isolate, v8Interface, WeakInfo::kTypeInterface, pInterface);
 
-  v8Interface->Set(MakeString(v8Isolate, "name"), MakeString(v8Isolate, "PInterface"));
+  v8Interface->Set(MakeString(v8Isolate, kNativeClassName), MakeString(v8Isolate, "IInterface"));
+  v8Interface->Set(MakeString(v8Isolate, kNativeAddress), v8::External::New(v8Isolate, pWeakInfo));
+
   for(int midx = 0; midx < nMtdCnt; midx++) {
     IMethodInfo *pMtdInfo = (*pMtdInfoArray)[midx];
 
@@ -226,13 +267,14 @@ void ElastosExtension::ClassInfoCreateObject(v8::Isolate* v8Isolate, const v8::F
     return;
   }
 
+  //SetWeak(v8Isolate, v8Interface);
+
   base::OS::Print("Success to exec Elastos::IClassInfo::CreateObject().\n");
   v8Args.GetReturnValue().Set(v8::Integer::New(v8Isolate, ret));
 }
 
 void ElastosExtension::MethodInfoCallback(const v8::FunctionCallbackInfo<v8::Value>& v8Args)
 {
-  base::OS::Print("%s\n", __PRETTY_FUNCTION__);
   v8::Isolate* v8Isolate = v8Args.GetIsolate();
   v8::HandleScope v8HandleScope(v8Isolate);
 
@@ -242,7 +284,7 @@ void ElastosExtension::MethodInfoCallback(const v8::FunctionCallbackInfo<v8::Val
   //auto v8Interface = v8::Local<v8::External>::Cast(v8MtdInfoData->Get(kFuncOwnerIdx)); // TODO
 
   IMethodInfo* pMtdInfo = static_cast<IMethodInfo*>(v8MtdInfoPriv->Value());
-  //PInterface pInterface = static_cast<PInterface>(v8Interface->Value()); // TODO
+  //IInterface* pInterface = static_cast<IInterface*>(v8Interface->Value()); // TODO
 
   Elastos::Int32 nArgCnt;
   CARAPI ret = pMtdInfo->GetParamCount(&nArgCnt);
@@ -402,28 +444,34 @@ int ElastosExtension::RestoreArgument(const struct ArgInfoCache& cache,
   return NOERROR;
 }
 
-void ElastosExtension::CreateObject(const v8::FunctionCallbackInfo<v8::Value>& v8Args)
+ElastosExtension::WeakInfo* ElastosExtension::NewWeak(v8::Isolate* v8Isolate, v8::Local<v8::Object> obj, int type, void* addr)
 {
-  base::OS::Print("%s begin\n", __PRETTY_FUNCTION__);
+  WeakInfo* pWeakInfo = new WeakInfo(v8Isolate, obj, type, addr);
 
-  auto v8Isolate = v8Args.GetIsolate();
+  pWeakInfo->gobj.SetWeak(pWeakInfo,
+                          ElastosExtension::WeakCallback,
+                          v8::WeakCallbackType::kParameter);
+  pWeakInfo->gobj.MarkIndependent();
 
-  auto v8ObjPtr = NewV8GlobalObject(v8Isolate, true);
-
-  v8Args.GetReturnValue().Set(v8ObjPtr->Get(v8Isolate));
-  base::OS::Print("%s end\n", __PRETTY_FUNCTION__);
+  return pWeakInfo;
 }
 
-void ElastosExtension::WeakCallback(const WeakCallbackInfo<v8::Global<v8::Object>>& v8Data)
+void ElastosExtension::DeleteWeak(WeakInfo* weakInfo)
 {
-  base::OS::Print("%s begin\n", __PRETTY_FUNCTION__);
-  auto v8ObjPtr = v8Data.GetParameter();
+  if(weakInfo == nullptr) {
+    return;
+  }
 
-  v8ObjPtr->Reset();
+  delete weakInfo;
+}
 
-  delete v8ObjPtr;
+void ElastosExtension::WeakCallback(const WeakCallbackInfo<WeakInfo>& v8Data)
+{
+  base::OS::Print("%s %d", __PRETTY_FUNCTION__, __LINE__);
 
-  base::OS::Print("%s end\n", __PRETTY_FUNCTION__);
+  auto weakInfo = v8Data.GetParameter();
+
+  DeleteWeak(weakInfo);
 }
 
 v8::Local<v8::String> ElastosExtension::MakeString(v8::Isolate* v8Isolate, const char* str)
@@ -433,23 +481,42 @@ v8::Local<v8::String> ElastosExtension::MakeString(v8::Isolate* v8Isolate, const
   return v8Str;
 }
 
-v8::Global<v8::Object>* ElastosExtension::NewV8GlobalObject(v8::Isolate* v8Isolate, bool set_weak)
+ElastosExtension::WeakInfo::WeakInfo(v8::Isolate* v8Isolate, v8::Local<v8::Object> obj, int type, void* addr)
+    : gobj(v8Isolate, obj)
+    , type(type)
+    , addr(addr)
 {
-  base::OS::Print("%s begin\n", __PRETTY_FUNCTION__);
+  base::OS::Print("%s type=%d addr=%p", __PRETTY_FUNCTION__, type, addr);
+}
 
-  auto v8Obj = v8::Object::New(v8Isolate);
-  auto v8ObjPtr = new v8::Global<v8::Object>(v8Isolate, v8Obj);
+ElastosExtension::WeakInfo::~WeakInfo()
+{
+  base::OS::Print("%s type=%d addr=%p", __PRETTY_FUNCTION__, type, addr);
+  Clear();
+}
 
-  if(set_weak == true) {
-    v8ObjPtr->SetWeak(v8ObjPtr,
-                        ElastosExtension::WeakCallback,
-                        v8::WeakCallbackType::kParameter);
-    v8ObjPtr->MarkIndependent();
+void ElastosExtension::WeakInfo::Clear()
+{
+  if(addr == nullptr) {
+    return;
   }
 
-  base::OS::Print("%s end\n", __PRETTY_FUNCTION__);
+  if(type == kTypeModule) {
+    IModuleInfo* pMdlInfo = static_cast<IModuleInfo*>(addr);
+    pMdlInfo->Release();
+  } else if(type == kTypeClass) {
+    IClassInfo* pClsInfo = static_cast<IClassInfo*>(addr);
+    pClsInfo->Release();
+  } else if(type == kTypeInterface) {
+    IInterface* pInterface = static_cast<IInterface*>(addr);
+    pInterface->Release();
+  } else {
+    base::OS::PrintError("%s Unknown type: %d", __PRETTY_FUNCTION__, type);
+  }
 
-  return v8ObjPtr;
+  type = -1;
+  addr = nullptr;
+  gobj.Reset();
 }
 
 #endif // defined(__ANDROID__)
