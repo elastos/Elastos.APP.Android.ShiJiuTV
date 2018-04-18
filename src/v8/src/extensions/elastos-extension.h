@@ -54,10 +54,25 @@ class ElastosExtension : public v8::Extension {
 
   static void MethodInfoCallback(const v8::FunctionCallbackInfo<v8::Value>& v8Args);
 
+  static int CacheArgumentInfo(void* pElastosArgList,
+                               int idx,
+                               struct ArgInfoCache& cache);
   static int CacheArgument(void* pElastosArgList,
                            const v8::FunctionCallbackInfo<v8::Value>& v8Args,
                            int idx,
                            struct ArgInfoCache& cache);
+  static int CacheInputArgument(void* pElastosArgList,
+                                const v8::FunctionCallbackInfo<v8::Value>& v8Args,
+                                int idx,
+                                struct ArgInfoCache& cache);
+  static int CacheCalleeAllocOutputArgument(void* pElastosArgList,
+                                            const v8::FunctionCallbackInfo<v8::Value>& v8Args,
+                                            int idx,
+                                            struct ArgInfoCache& cache);
+  static int CacheCallerAllocOutputArgument(void* pElastosArgList,
+                                            const v8::FunctionCallbackInfo<v8::Value>& v8Args,
+                                            int idx,
+                                            struct ArgInfoCache& cache);
   static int RestoreArgument(const struct ArgInfoCache& cache, int idx, const v8::FunctionCallbackInfo<v8::Value>& v8Args);
 
   static WeakInfo* NewWeak(v8::Isolate* v8Isolate, v8::Local<v8::Object> obj, int type, void* addr);

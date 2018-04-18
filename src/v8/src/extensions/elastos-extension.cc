@@ -311,6 +311,11 @@ void ElastosExtension::MethodInfoCallback(const v8::FunctionCallbackInfo<v8::Val
 
   struct ArgInfoCache cache[nArgCnt];
   for(int pidx = 0; pidx < nArgCnt; pidx++) {
+    ret = CacheArgumentInfo(pArgList, pidx, cache[pidx]);
+    if (ret != NOERROR) {
+      break;
+    }
+
     ret = CacheArgument(pArgList, v8Args, pidx, cache[pidx]);
     if (ret != NOERROR) {
       break;
@@ -323,7 +328,8 @@ void ElastosExtension::MethodInfoCallback(const v8::FunctionCallbackInfo<v8::Val
 
   //ret = pMtdInfo->Invoke(pInterface, pArgList); // TODO
   if(std::string(*v8FuncName) == "Hello") {
-    cache[0].value = std::make_shared<Elastos::String>("Elastos Demo Test");
+    Elastos::String* value = static_cast<Elastos::String*>(cache[0].value.get());
+    *value += "Elastos Demo Test";
   }
   if (ret != NOERROR) {
     base::OS::PrintError("Error: Failed to exec Elastos::IMethodInfo::Invoke(). ECode=0x%08x\n", ret);
@@ -346,10 +352,9 @@ void ElastosExtension::MethodInfoCallback(const v8::FunctionCallbackInfo<v8::Val
   v8Args.GetReturnValue().Set(v8::Integer::New(v8Isolate, ret));
 }
 
-int ElastosExtension::CacheArgument(void* pElastosArgList,
-                                    const v8::FunctionCallbackInfo<v8::Value>& v8Args,
-                                    int idx,
-                                    struct ArgInfoCache& cache)
+int ElastosExtension::CacheArgumentInfo(void* pElastosArgList,
+                                        int idx,
+                                        struct ArgInfoCache& cache)
 {
   IArgumentList* pArgList = static_cast<IArgumentList*>(pElastosArgList);
 
@@ -390,24 +395,258 @@ int ElastosExtension::CacheArgument(void* pElastosArgList,
   }
   cache.type = nType;
 
-  if(ioAttr == ParamIOAttribute_In) {
-    base::OS::PrintError("Error: TODO %s:%d\n", __FILE__, __LINE__);
-    return E_NOT_IMPLEMENTED;
-  } else {
-    if(nType == CarDataType_String) {
-      cache.value = std::make_shared<Elastos::String>();
-      ret = pArgList->SetOutputArgumentOfStringPtr(0, static_cast<Elastos::String*>(cache.value.get()));
-      if (ret != NOERROR) {
-        base::OS::PrintError("Error: Failed to exec Elastos::IArgumentList::SetOutputArgumentOfStringPtr(). ECode=0x%08x\n", ret);
-        return ret;
-      }
-    } else {
-      base::OS::PrintError("Error: TODO %s:%d\n", __FILE__, __LINE__);
-      return E_NOT_IMPLEMENTED;
+  return NOERROR;
+}
+
+int ElastosExtension::CacheArgument(void* pElastosArgList,
+                                    const v8::FunctionCallbackInfo<v8::Value>& v8Args,
+                                    int idx,
+                                    struct ArgInfoCache& cache)
+{
+  CARAPI ret = E_NOT_IMPLEMENTED;
+
+  switch(cache.direction) {
+    case ParamIOAttribute_In: {
+      ret = CacheInputArgument(pElastosArgList, v8Args, idx, cache);
+      break;
+    }
+    case ParamIOAttribute_CalleeAllocOut: {
+      ret = CacheCalleeAllocOutputArgument(pElastosArgList, v8Args, idx, cache);
+      break;
+    }
+    case ParamIOAttribute_CallerAllocOut: {
+      ret = CacheCallerAllocOutputArgument(pElastosArgList, v8Args, idx, cache);
+      break;
+    }
+    default: {
+      base::OS::PrintError("Error: Bad ParamIOAttribute\n");
+      ret = E_NOT_IMPLEMENTED;
+      break;
     }
   }
 
-  return NOERROR;
+  if (ret != NOERROR) {
+    base::OS::PrintError("Error: Failed to cache argument. ECode=0x%08x\n", ret);
+    return ret;
+  }
+  return ret;
+}
+
+int ElastosExtension::CacheInputArgument(void* pElastosArgList,
+                                         const v8::FunctionCallbackInfo<v8::Value>& v8Args,
+                                         int idx,
+                                         struct ArgInfoCache& cache)
+{
+  if(cache.direction != ParamIOAttribute_In) {
+    base::OS::PrintError("Error: Bad ParamIOAttribute_In argument\n");
+    return E_NOT_IMPLEMENTED;
+  }
+
+  IArgumentList* pArgList = static_cast<IArgumentList*>(pElastosArgList);
+  CARAPI ret = E_NOT_IMPLEMENTED;
+
+  v8::Local<v8::Value> v8Value = v8Args[idx];
+
+  switch(cache.type) {
+    case CarDataType_Int16: {
+      auto value = std::make_shared<Elastos::Int16>(v8Value->NumberValue());
+      cache.value = value;
+      ret = pArgList->SetInputArgumentOfInt16(idx, *value.get());
+      break;
+    }
+    case CarDataType_Int32: {
+      auto value = std::make_shared<Elastos::Int32>(v8Value->NumberValue());
+      cache.value = value;
+      ret = pArgList->SetInputArgumentOfInt32(idx, *value.get());
+      break;
+    }
+    case CarDataType_Int64: {
+      auto value = std::make_shared<Elastos::Int64>(v8Value->NumberValue());
+      cache.value = value;
+      ret = pArgList->SetInputArgumentOfInt64(idx, *value.get());
+      break;
+    }
+    case CarDataType_Byte: {
+      auto value = std::make_shared<Elastos::Byte>(v8Value->NumberValue());
+      cache.value = value;
+      ret = pArgList->SetInputArgumentOfByte(idx, *value.get());
+      break;
+    }
+    case CarDataType_Float: {
+      auto value = std::make_shared<Elastos::Float>(v8Value->NumberValue());
+      cache.value = value;
+      ret = pArgList->SetInputArgumentOfFloat(idx, *value.get());
+      break;
+    }
+    case CarDataType_Double: {
+      auto value = std::make_shared<Elastos::Double>(v8Value->NumberValue());
+      cache.value = value;
+      ret = pArgList->SetInputArgumentOfDouble(idx, *value.get());
+      break;
+    }
+    case CarDataType_Char32: {
+      base::OS::PrintError("Error: TODO %s:%d E_NOT_IMPLEMENTED\n", __FILE__, __LINE__);
+      ret = E_NOT_IMPLEMENTED;
+      break;
+    }
+    case CarDataType_String: {
+      auto value = std::make_shared<Elastos::String>(*v8::String::Utf8Value(v8Value));
+      cache.value = value;
+      ret = pArgList->SetInputArgumentOfString(idx, *value.get());
+      break;
+    }
+    case CarDataType_Boolean: {
+      auto value = std::make_shared<Elastos::Boolean>(v8Value->BooleanValue());
+      cache.value = value;
+      ret = pArgList->SetInputArgumentOfBoolean(idx, *value.get());
+      break;
+    }
+    case CarDataType_EMuid:
+    case CarDataType_EGuid:
+    case CarDataType_ECode:
+    case CarDataType_LocalPtr:
+    case CarDataType_LocalType:
+    case CarDataType_Enum:
+    case CarDataType_ArrayOf:
+    case CarDataType_CppVector:
+    case CarDataType_Struct:
+    case CarDataType_Interface: {
+      base::OS::PrintError("Error: TODO %s:%d E_NOT_IMPLEMENTED\n", __FILE__, __LINE__);
+      ret = E_NOT_IMPLEMENTED;
+      break;
+    }
+    default: {
+      base::OS::PrintError("Error: Bad CarDataType\n");
+      ret = E_NOT_IMPLEMENTED;
+      break;
+    }
+  }
+
+  if (ret != NOERROR) {
+    base::OS::PrintError("Error: Failed to cache input argument. ECode=0x%08x\n", ret);
+    return ret;
+  }
+  return ret;
+}
+
+int ElastosExtension::CacheCalleeAllocOutputArgument(void* pElastosArgList,
+                                                     const v8::FunctionCallbackInfo<v8::Value>& v8Args,
+                                                     int idx,
+                                                     struct ArgInfoCache& cache)
+{
+  base::OS::PrintError("Error: TODO %s:%d E_NOT_IMPLEMENTED\n", __FILE__, __LINE__);
+  return E_NOT_IMPLEMENTED;
+}
+
+int ElastosExtension::CacheCallerAllocOutputArgument(void* pElastosArgList,
+                                                     const v8::FunctionCallbackInfo<v8::Value>& v8Args,
+                                                     int idx,
+                                                     struct ArgInfoCache& cache)
+{
+  if(cache.direction != ParamIOAttribute_CallerAllocOut) {
+    base::OS::PrintError("Error: Bad ParamIOAttribute_CallerAllocOut argument\n");
+    return E_NOT_IMPLEMENTED;
+  }
+
+  v8::Isolate* v8Isolate = v8Args.GetIsolate();
+
+  if(v8Args[idx]->IsObject() == false) {
+    auto v8MtdInfoData = v8::Local<v8::Object>::Cast(v8Args.Data());
+    v8::String::Utf8Value v8FuncName(v8MtdInfoData->Get(kFuncNameIdx));
+    std::ostringstream errmsg;
+    errmsg << "TypeError: Failed to execute '" << *v8FuncName << "': ";
+    errmsg << "object argument required for index " << idx;
+    ThrowException(v8Isolate, errmsg.str().c_str());
+    return E_INVALID_ARGUMENT;
+  }
+
+  v8::Local<v8::Object> v8Object = v8::Local<v8::Object>::Cast(v8Args[idx]);
+  v8::Local<v8::String> v8ValueKey = MakeString(v8Isolate, "value");
+  v8::Local<v8::Value> v8Value = v8Object->Get(v8ValueKey);
+
+  IArgumentList* pArgList = static_cast<IArgumentList*>(pElastosArgList);
+  CARAPI ret = E_NOT_IMPLEMENTED;
+
+  switch(cache.type) {
+    case CarDataType_Int16: {
+      auto value = std::make_shared<Elastos::Int16>(v8Value->NumberValue());
+      cache.value = value;
+      ret = pArgList->SetOutputArgumentOfInt16Ptr(idx, value.get());
+      break;
+    }
+    case CarDataType_Int32: {
+      auto value = std::make_shared<Elastos::Int32>(v8Value->NumberValue());
+      cache.value = value;
+      ret = pArgList->SetOutputArgumentOfInt32Ptr(idx, value.get());
+      break;
+    }
+    case CarDataType_Int64: {
+      auto value = std::make_shared<Elastos::Int64>(v8Value->NumberValue());
+      cache.value = value;
+      ret = pArgList->SetOutputArgumentOfInt64Ptr(idx, value.get());
+      break;
+    }
+    case CarDataType_Byte: {
+      auto value = std::make_shared<Elastos::Byte>(v8Value->NumberValue());
+      cache.value = value;
+      ret = pArgList->SetOutputArgumentOfBytePtr(idx, value.get());
+      break;
+    }
+    case CarDataType_Float: {
+      auto value = std::make_shared<Elastos::Float>(v8Value->NumberValue());
+      cache.value = value;
+      ret = pArgList->SetOutputArgumentOfFloatPtr(idx, value.get());
+      break;
+    }
+    case CarDataType_Double: {
+      auto value = std::make_shared<Elastos::Double>(v8Value->NumberValue());
+      cache.value = value;
+      ret = pArgList->SetOutputArgumentOfDoublePtr(idx, value.get());
+      break;
+    }
+    case CarDataType_Char32: {
+      base::OS::PrintError("Error: TODO %s:%d E_NOT_IMPLEMENTED\n", __FILE__, __LINE__);
+      ret = E_NOT_IMPLEMENTED;
+      break;
+    }
+    case CarDataType_String: {
+      auto value = std::make_shared<Elastos::String>(*v8::String::Utf8Value(v8Value));
+      cache.value = value;
+      ret = pArgList->SetOutputArgumentOfStringPtr(idx, value.get());
+      break;
+    }
+    case CarDataType_Boolean: {
+      auto value = std::make_shared<Elastos::Boolean>(v8Value->BooleanValue());
+      cache.value = value;
+      ret = pArgList->SetOutputArgumentOfBooleanPtr(idx, value.get());
+      break;
+    }
+    case CarDataType_EMuid:
+    case CarDataType_EGuid:
+    case CarDataType_ECode:
+    case CarDataType_LocalPtr:
+    case CarDataType_LocalType:
+    case CarDataType_Enum:
+    case CarDataType_ArrayOf:
+    case CarDataType_CppVector:
+    case CarDataType_Struct:
+    case CarDataType_Interface: {
+      base::OS::PrintError("Error: TODO %s:%d E_NOT_IMPLEMENTED\n", __FILE__, __LINE__);
+      ret = E_NOT_IMPLEMENTED;
+      break;
+    }
+    default: {
+      base::OS::PrintError("Error: Bad CarDataType\n");
+      ret = E_NOT_IMPLEMENTED;
+      break;
+    }
+  }
+
+  if (ret != NOERROR) {
+    base::OS::PrintError("Error: Failed to cache argument. ECode=0x%08x\n", ret);
+    return ret;
+  }
+  return ret;
 }
 
 int ElastosExtension::RestoreArgument(const struct ArgInfoCache& cache,
@@ -430,16 +669,75 @@ int ElastosExtension::RestoreArgument(const struct ArgInfoCache& cache,
     return E_INVALID_ARGUMENT;
   }
 
-  v8::Local<v8::Object> v8Value = v8::Local<v8::Object>::Cast(v8Args[idx]);
+  v8::Local<v8::Object> v8Object = v8::Local<v8::Object>::Cast(v8Args[idx]);
+  v8::Local<v8::String> v8ValueKey = MakeString(v8Isolate, "value");
+  v8::Local<v8::Value> v8Value;
 
-  if(cache.type == CarDataType_String) {
-    Elastos::String* value = static_cast<Elastos::String*>(cache.value.get());
-    v8Value->Set(MakeString(v8Isolate, "value"),
-                 MakeString(v8Isolate, value->string()));
-  } else {
-    base::OS::PrintError("Error: TODO %s:%d\n", __FILE__, __LINE__);
-    return E_NOT_IMPLEMENTED;
+  switch(cache.type) {
+    case CarDataType_Int16: {
+      Elastos::Int16* value = static_cast<Elastos::Int16*>(cache.value.get());
+      v8Value = v8::Number::New(v8Isolate, *value);
+      break;
+    }
+    case CarDataType_Int32: {
+      Elastos::Int32* value = static_cast<Elastos::Int32*>(cache.value.get());
+      v8Value = v8::Number::New(v8Isolate, *value);
+      break;
+    }
+    case CarDataType_Int64: {
+      Elastos::Int64* value = static_cast<Elastos::Int64*>(cache.value.get());
+      v8Value = v8::Number::New(v8Isolate, *value);
+      break;
+    }
+    case CarDataType_Byte: {
+      Elastos::Byte* value = static_cast<Elastos::Byte*>(cache.value.get());
+      v8Value = v8::Number::New(v8Isolate, *value);
+      break;
+    }
+    case CarDataType_Float: {
+      Elastos::Float* value = static_cast<Elastos::Float*>(cache.value.get());
+      v8Value = v8::Number::New(v8Isolate, *value);
+      break;
+    }
+    case CarDataType_Double: {
+      Elastos::Double* value = static_cast<Elastos::Double*>(cache.value.get());
+      v8Value = v8::Number::New(v8Isolate, *value);
+      break;
+    }
+    case CarDataType_Char32: {
+      base::OS::PrintError("Error: TODO %s:%d E_NOT_IMPLEMENTED\n", __FILE__, __LINE__);
+      return E_NOT_IMPLEMENTED;
+    }
+    case CarDataType_String: {
+      Elastos::String* value = static_cast<Elastos::String*>(cache.value.get());
+      v8Value = MakeString(v8Isolate, value->string());
+      break;
+    }
+    case CarDataType_Boolean: {
+      Elastos::Boolean* value = static_cast<Elastos::Boolean*>(cache.value.get());
+      v8Value = v8::Boolean::New(v8Isolate, *value);
+      break;
+    }
+    case CarDataType_EMuid:
+    case CarDataType_EGuid:
+    case CarDataType_ECode:
+    case CarDataType_LocalPtr:
+    case CarDataType_LocalType:
+    case CarDataType_Enum:
+    case CarDataType_ArrayOf:
+    case CarDataType_CppVector:
+    case CarDataType_Struct:
+    case CarDataType_Interface: {
+      base::OS::PrintError("Error: TODO %s:%d E_NOT_IMPLEMENTED\n", __FILE__, __LINE__);
+      return E_NOT_IMPLEMENTED;
+    }
+    default: {
+     base::OS::PrintError("Error: Bad CarDataType\n");
+     return E_NOT_IMPLEMENTED;
+     }
   }
+
+  v8Object->Set(v8ValueKey, v8Value);
 
   return NOERROR;
 }

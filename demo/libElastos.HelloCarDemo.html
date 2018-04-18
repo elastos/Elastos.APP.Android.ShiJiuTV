@@ -19,7 +19,7 @@
 			ecode=clsInfo.CreateObject(iface);
 			text += "CreateObject() ecode=" + ecode + " iface=" + JSON.stringify(iface) + "<br/>";
 			if(ecode == 0) {
-				var retval = {};
+				var retval = { value: "In " };
 				ecode=iface.Hello(retval);
 				text += "Hello() ecode=" + ecode + " retval=" + JSON.stringify(retval) + "<br/>";
 
