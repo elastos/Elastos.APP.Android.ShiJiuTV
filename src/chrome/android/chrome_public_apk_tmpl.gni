@@ -97,15 +97,13 @@ template("chrome_public_apk_tmpl") {
 
     # QCast Modify >>>
     loadable_modules = [
+      "//v8/src/third_party/elastos/${v8_current_cpu}/libs/libcrypto.so",
       "//v8/src/third_party/elastos/${v8_current_cpu}/libs/libelacarrier.so",
+      "//v8/src/third_party/elastos/${v8_current_cpu}/libs/libelacommon.so",
       "//v8/src/third_party/elastos/${v8_current_cpu}/libs/libelasession.so",
+      "//v8/src/third_party/elastos/${v8_current_cpu}/libs/libElastos.CoreLibrary.so",
       "//v8/src/third_party/elastos/${v8_current_cpu}/libs/libElastos.Runtime.so",
       "//v8/src/third_party/elastos/${v8_current_cpu}/libs/libstlport.so",
-      "//v8/src/third_party/elastos/${v8_current_cpu}/libs/libcrypto.so",
-      "//v8/src/third_party/elastos/${v8_current_cpu}/libs/libelacommon.so",
-      "//v8/src/third_party/elastos/${v8_current_cpu}/libs/libElastos.CoreLibrary.so",
-      "//v8/src/third_party/elastos/${v8_current_cpu}/libs/libicuuc.so",
-      "//v8/src/third_party/elastos/${v8_current_cpu}/libs/libElastos.HelloCar.so",
     ]
     # QCast Modify <<<
   }

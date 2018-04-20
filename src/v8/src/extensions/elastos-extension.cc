@@ -281,10 +281,10 @@ void ElastosExtension::MethodInfoCallback(const v8::FunctionCallbackInfo<v8::Val
   auto v8MtdInfoData = v8::Local<v8::Object>::Cast(v8Args.Data());
   v8::String::Utf8Value v8FuncName(v8MtdInfoData->Get(kFuncNameIdx));
   auto v8MtdInfoPriv = v8::Local<v8::External>::Cast(v8MtdInfoData->Get(kFuncPrivIdx));
-  //auto v8Interface = v8::Local<v8::External>::Cast(v8MtdInfoData->Get(kFuncOwnerIdx)); // TODO
+  auto v8Interface = v8::Local<v8::External>::Cast(v8MtdInfoData->Get(kFuncOwnerIdx));
 
   IMethodInfo* pMtdInfo = static_cast<IMethodInfo*>(v8MtdInfoPriv->Value());
-  //IInterface* pInterface = static_cast<IInterface*>(v8Interface->Value()); // TODO
+  IInterface* pInterface = static_cast<IInterface*>(v8Interface->Value());
 
   Elastos::Int32 nArgCnt;
   CARAPI ret = pMtdInfo->GetParamCount(&nArgCnt);
@@ -326,11 +326,7 @@ void ElastosExtension::MethodInfoCallback(const v8::FunctionCallbackInfo<v8::Val
     return;
   }
 
-  //ret = pMtdInfo->Invoke(pInterface, pArgList); // TODO
-  if(std::string(*v8FuncName) == "Hello") {
-    Elastos::String* value = static_cast<Elastos::String*>(cache[0].value.get());
-    *value += "Elastos Demo Test";
-  }
+  ret = pMtdInfo->Invoke(pInterface, pArgList);
   if (ret != NOERROR) {
     base::OS::PrintError("Error: Failed to exec Elastos::IMethodInfo::Invoke(). ECode=0x%08x\n", ret);
     v8Args.GetReturnValue().Set(v8::Integer::New(v8Isolate, ret));

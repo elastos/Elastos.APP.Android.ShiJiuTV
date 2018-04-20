@@ -123,9 +123,6 @@ typedef UInt32 Address;
 
 /** @} */
 
-/** @addtogroup CARTypesRef
-  *   @{
-  */
 typedef struct _EMuid
 {
     UInt32  mData1;
@@ -144,7 +141,6 @@ typedef struct _EGuid
 typedef EGuid ClassID;
 typedef EMuid InterfaceID;
 typedef InterfaceID EIID;
-/** @} */
 
 typedef ClassID *PClassID;
 typedef InterfaceID *PInterfaceID;

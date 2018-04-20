@@ -1,7 +1,7 @@
 #ifndef ___ElastosCore_h__
 #define ___ElastosCore_h__
 
-#include <ElastosCore.h>
+#include "ElastosCore.h"
 
 ELAPI _Impl_AcquireCallbackHandler(PInterface pServerObj, _ELASTOS REIID iid, PInterface *ppHandler);
 ELAPI _Impl_CheckClsId(PInterface pServerObj, const _ELASTOS ClassID* pClassid, PInterface *ppServerObj);
@@ -2342,7 +2342,7 @@ ICarrierListener : public IInterface
 
 };
 
-CAR_INTERFACE("172BAB38-0312-3512-6AB0-B8FF43B5EB0D")
+CAR_INTERFACE("9C89B33F-0312-3512-6AB0-B8FF43B5EB0D")
 ICarrier : public IInterface
 {
     virtual CARAPI_(PInterface) Probe(
@@ -2402,10 +2402,47 @@ ICarrier : public IInterface
         /* [in] */ ICarrierListener * listener) = 0;
 
     virtual CARAPI Import(
-        /* [in] */ const _ELASTOS String& dataPath) = 0;
+        /* [in] */ const _ELASTOS String& dataFile) = 0;
 
     virtual CARAPI Export(
-        /* [out] */ _ELASTOS String * dataPath) = 0;
+        /* [out] */ _ELASTOS String * dataFile) = 0;
+
+    virtual CARAPI GetUerid(
+        /* [out] */ _ELASTOS String * myUid) = 0;
+
+};
+
+CAR_INTERFACE("21022438-E652-3F95-8C64-269719000000")
+IServiceManager : public IInterface
+{
+    virtual CARAPI_(PInterface) Probe(
+        /* [in] */ _ELASTOS REIID riid) = 0;
+
+    static CARAPI_(IServiceManager*) Probe(PInterface pObj)
+    {
+        if (pObj == NULL) return NULL;
+        return (IServiceManager*)pObj->Probe(EIID_IServiceManager);
+    }
+
+    static CARAPI_(IServiceManager*) Probe(IObject* pObj)
+    {
+        if (pObj == NULL) return NULL;
+        return (IServiceManager*)pObj->Probe(EIID_IServiceManager);
+    }
+
+    static CARAPI_(IServiceManager*) QueryInterface(const Elastos::String& uid)
+    {
+        return NULL;
+    }
+
+    virtual CARAPI AddService(
+        /* [in] */ const _ELASTOS String& name,
+        /* [in] */ IInterface * service) = 0;
+
+    virtual CARAPI GetService(
+        /* [in] */ const _ELASTOS String& uid,
+        /* [in] */ const _ELASTOS String& name,
+        /* [out] */ IInterface ** service) = 0;
 
 };
 

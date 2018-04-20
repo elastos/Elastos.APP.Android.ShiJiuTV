@@ -1,35 +1,58 @@
 <!DOCTYPE HTML>
 <html>
 <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 </head>
 
 <body>
 <script type="text/javascript">
-	var text = "";
-	var mdlInfo = {};
-	var ecode=window.elastosAcquireModuleInfo("/data/local/tmp/libElastos.HelloCarDemo.so", mdlInfo);
-	text += "elastosAcquireModuleInfo() ecode=" + ecode + " mdlInfo=" + JSON.stringify(mdlInfo) + "<br/>";
-	if(ecode == 0) {
+  function elastosDemo() {
+		var mdlInfo = {};
+		var ecode=window.elastosAcquireModuleInfo("/data/local/tmp/libElastos.HelloCarDemo.so", mdlInfo);
+		text += "执行: elastosAcquireModuleInfo()  &nbsp;&nbsp; 结果: ecode=" + ecode + " mdlInfo=" + JSON.stringify(mdlInfo) + "<br/>";
+		if(ecode != 0) {
+			return;
+		}
+
 		var clsInfo = {};
 		ecode=mdlInfo.GetClassInfo("CHelloCar", clsInfo);
-		text += "GetClassInfo() ecode=" + ecode + " clsInfo=" + JSON.stringify(clsInfo) + "<br/>";
-		if(ecode == 0) {
-			var iface = {};
-			ecode=clsInfo.CreateObject(iface);
-			text += "CreateObject() ecode=" + ecode + " iface=" + JSON.stringify(iface) + "<br/>";
-			if(ecode == 0) {
-				var retval = { value: "In " };
-				ecode=iface.Hello(retval);
-				text += "Hello() ecode=" + ecode + " retval=" + JSON.stringify(retval) + "<br/>";
-
-				text +=  "<br/>" + "最终结果: " + retval.value + "<br/>";
-			}
+		text += "执行: GetClassInfo()  &nbsp;&nbsp; 结果: ecode=" + ecode + " clsInfo=" + JSON.stringify(clsInfo) + "<br/>";
+		if(ecode != 0) {
+			return;
 		}
+
+		var iface = {};
+		ecode=clsInfo.CreateObject(iface);
+		text += "执行: CreateObject()  &nbsp;&nbsp; 结果: ecode=" + ecode + " iface=" + JSON.stringify(iface) + "<br/>";
+		if(ecode != 0) {
+			return;
+		}
+
+		var retval = { value: "In " };
+		ecode=iface.Hello(retval);
+		text += "执行: Hello()   &nbsp;&nbsp; 结果: ecode=" + ecode + " retval=" + JSON.stringify(retval) + "<br/>";
+		if(ecode != 0) {
+			return;
+		}
+
+		text +=  "<br/>" + "最终结果: " + retval.value + "<br/><br/>";
+
+		text += "release " + iface.nativeClassName + "<br/>";
+		window.elastosRelease(iface);
+
+		text += "release " + clsInfo.nativeClassName + ", release multi times<br/>";
+		window.elastosRelease(clsInfo);
+		window.elastosRelease(clsInfo); // dump release
+
+		text += "ignore release " + mdlInfo.nativeClassName + ", wait for gc<br/>";
+		//window.elastosRelease(mdlInfo); // wait for gc
 	}
 
+	var text = "";
+  elastosDemo();
 	document.write(text);
 </script>
 
 </body>
 </html>
+

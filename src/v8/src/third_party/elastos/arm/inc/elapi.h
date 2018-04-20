@@ -126,5 +126,8 @@ ELAPI ECO_PUBLIC _CObject_UnmarshalInterface(
 ELAPI ECO_PUBLIC _CCarrier_GetInstance(
     /* [out] */ ICarrier** carrier);
 
+ELAPI ECO_PUBLIC _CServiceManager_AcquireInstance(
+    /* [out] */ IServiceManager** manager);
+
 #endif // __ELAPI_H__
 /** @} */

@@ -2,7 +2,7 @@
 #define __CAR_ELASTOSCORE_H__
 
 #ifndef _NO_INCLIST
-#include <elastos.h>
+#include "elastos.h"
 //using namespace Elastos;
 #endif // !_NO_INCLIST
 
@@ -89,6 +89,8 @@ interface ICarrierListener;
 EXTERN const _ELASTOS InterfaceID EIID_ICarrierListener;
 interface ICarrier;
 EXTERN const _ELASTOS InterfaceID EIID_ICarrier;
+interface IServiceManager;
+EXTERN const _ELASTOS InterfaceID EIID_IServiceManager;
 
 
 
