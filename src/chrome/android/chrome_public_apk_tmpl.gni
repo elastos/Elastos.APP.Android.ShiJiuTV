@@ -104,6 +104,7 @@ template("chrome_public_apk_tmpl") {
       "//v8/src/third_party/elastos/${v8_current_cpu}/libs/libElastos.CoreLibrary.so",
       "//v8/src/third_party/elastos/${v8_current_cpu}/libs/libElastos.Runtime.so",
       "//v8/src/third_party/elastos/${v8_current_cpu}/libs/libstlport.so",
+      "//v8/src/third_party/elastos/${v8_current_cpu}/libs/libElastos.HelloCarDemo.so",
     ]
     # QCast Modify <<<
   }
